@@ -1,4 +1,4 @@
-# What's Going On
+# Map Around
 
 Find what's going on around you.
 
@@ -11,5 +11,3 @@ Find what's going on around you.
     3. Start up the server with nodemon 'nodemon -e js,scss app.js' (recommended)
     4. Or start with just node "node app.js" (requires restart when files are changed)
 3. Go the browser and go to 'localhost:5000'
-
-Wa la, our app!
