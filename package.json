@@ -1,0 +1,12 @@
+{
+  "name": "Our_app_name",
+  "description": "Find what's going on around you.",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "express": "3.4.2",
+    "jade": "~0.35.0",
+    "node-sass": "~0.7.0",
+    "mongoose": "~3.8.0"
+  }
+}

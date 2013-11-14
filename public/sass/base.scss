@@ -1,0 +1,6 @@
+// This is where we import all of our scss so the compiler only has to compile one file
+
+@import "variables.scss";
+@import "mixins.scss";
+@import "app.scss";
+@import "alertify.scss";

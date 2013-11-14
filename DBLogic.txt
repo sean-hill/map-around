@@ -1,0 +1,34 @@
+
+
+Party
+	REQUIRED
+		Name
+		location
+		DateRange
+			Start DateTime?
+			End DateTime?
+	
+	OPTIONAL
+		Desc
+			Description
+		Price (Default = Free?)
+		URL
+
+
+Search
+	REQUIRED
+		DateRange
+			Start DateTime
+			End DateTime
+		Location (where they're looking on the map)
+			GeoLocation + Radius
+
+
+	OPTIONAL
+		Key word filter (Types of Events?) if Name or Desc contains any
+		Price Range
+			Free
+
+
+			(EET > SST && EET <= SET) || (EST < SET && EST >= SST)
+			If any part of the event occurs during the search window show it

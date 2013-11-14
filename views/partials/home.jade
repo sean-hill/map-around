@@ -1,0 +1,28 @@
+div.navbar
+	a.brand(href="/") Going On
+	div.nav-actions
+		ul.nav-list
+			li: button.btn(ng-click="modalView = 'search'", ng-class="{active: modalView == 'search'}") Search
+			li: button.btn(ng-click="modalView = 'create'", ng-class="{active: modalView == 'create'}") Create
+			li: button.btn Sign In
+
+div.criteria-form(ng-class="{show: modalView == 'search'}")
+	form(ng-submit="searchParty()")
+		input(type="text", ng-model="form.title" placeholder="Let's be awesome tonight")
+		button.btn.btn-submit(type="submit") Search
+div.criteria-form(ng-class="{show: modalView == 'create'}")
+	form(ng-submit="createParty()")
+		div.header
+			h1 Create an event
+			button.close(type="button", ng-click="modalView = ''") &times;
+		div.location-input
+			input(type="text", ng-model="form.location.address", placeholder="{{locationPlaceholder}}", onblurgeocode)
+			div.current-location(currentlocation)
+				img(src="/img/current-location.svg", height="20px", width="20px")
+		input(type="text", ng-model="form.title", placeholder="Title")
+		br
+		input(type="text", ng-model="form.description", placeholder="Description")
+		br
+		button.btn.btn-submit(type="submit") Create Event
+
+div#event-map.event-map(eventmap)

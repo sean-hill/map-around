@@ -1,0 +1,224 @@
+html, body {
+  margin: 0px;
+  font-family: 'Open Sans', "helvetica neue", sans-serif;
+}
+
+a {
+  text-decoration: none;
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0px;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus {
+  outline: none;
+}
+
+.hide {
+  display: none !important;
+}
+
+.show {
+  display: block !important;
+}
+
+// Navbar styles
+$nav-height: 50px;
+$nav-border-width: 3px;
+$to-screen-edge: 8px;
+.navbar {
+
+  height: $nav-height;
+  background: $main-color;
+  border-bottom: $nav-border-width solid #FFF;
+  position: relative;
+  z-index: 100;
+
+  a.brand {
+
+    float: left;
+    color: #FFF;
+    padding-left: 20px;
+    padding: 6px 0px 0px $to-screen-edge;
+    font-size: 25px;
+    -webkit-font-smoothing: antialiased;
+    text-shadow: rgb(179, 179, 179) 0px 1px 2px, rgb(31, 31, 31) 0px 1px 0px;
+    
+  }
+
+  div.nav-actions {
+
+    float: right;
+    margin: $to-screen-edge $to-screen-edge;
+
+    ul.nav-list {
+      list-style: none;
+      margin: 0px;
+      padding: 0px;
+      li {
+        float: left;
+
+        .btn {
+          margin-left: 10px;
+        }
+      }
+    }
+
+  }
+}
+
+// Main event map styles
+.event-map {
+  position: absolute;
+  top: $nav-height + $nav-border-width;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+}
+
+// Search and Create forms
+.criteria-form {
+  background: #FFF;
+  border: 3px solid $main-color;
+  position: absolute;
+  top: $nav-height + $nav-border-width + $to-screen-edge;
+  display: none;
+  z-index: 3;
+  overflow: hidden;
+  padding: 15px;
+  right: $to-screen-edge;
+  opacity: .7;
+
+  @include transition(100ms all linear);
+  @include border-radius(5px);
+  @include border-box;
+
+  .header {
+    margin-bottom: 20px;
+    h1 {
+      font-size: 20px;
+      display: inline-block;  
+      font-weight: lighter;
+    }
+  }
+
+  &:hover {
+    opacity: 1;
+  }
+
+  input {
+    width: 300px;
+  }
+}
+
+input {
+  margin: 0;
+  padding: 8px 10px;
+  border: 2px solid #DDD;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 10px;
+
+  @include border-box;
+  @include transition(200ms all linear);
+
+  &:focus {
+    outline: none;
+    border-color: $main-color
+  }
+
+  &:-moz-placeholder, &::-moz-placeholder, &:-ms-input-placeholder, &::-webkit-input-placeholder {
+    color: #DDD;
+    font-family: 'Open Sans', "helvetica neue", sans-serif;
+  }
+}
+
+div.location-input {
+
+  position: relative;
+
+  input {
+    padding-right: 30px;
+  }
+
+  div.current-location {
+    position: absolute;
+    right: 7px;
+    top: 8px;
+    z-index: 1;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+
+// Button styles
+.btn {
+  display: inline-block;
+  padding: 4px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  color: #FFF;
+  background: none;
+  border: 1px solid #FFF;
+  @include border-radius(4px);
+  @include transition(100ms all linear);
+
+  &:hover, &:active, &.active {
+    background: #FFF;
+    color: $main-color;
+    outline: 0;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &.btn-submit {
+    border-color: $main-color;
+    color: $main-color;
+    padding: 6px 10px;
+
+    &:hover {
+      background: $main-color;
+      color: #FFF;
+    }
+  }
+}
+
+.close {
+  float: right;
+  font-size: 21px;
+  font-weight: bold;
+  line-height: 1;
+  color: #000000;
+  text-shadow: 0 1px 0 #ffffff;
+  opacity: 0.2;
+
+  &:hover, &:focus {
+    color: #000000;
+    text-decoration: none;
+    cursor: pointer;
+    opacity: 0.5;
+  }
+}
+
+button.close {
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  -webkit-appearance: none;
+}
