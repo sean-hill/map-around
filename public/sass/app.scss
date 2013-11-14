@@ -1,6 +1,6 @@
 html, body {
   margin: 0px;
-  font-family: 'Open Sans', "helvetica neue", sans-serif;
+  font-family: $font-family;
 }
 
 a {
@@ -13,6 +13,11 @@ a {
 h1, h2, h3, h4, h5, h6 {
   margin: 0px;
   -webkit-font-smoothing: antialiased;
+  color: $font-color;
+}
+
+td, th {
+  font-weight: normal;
 }
 
 :focus {
@@ -135,7 +140,8 @@ input {
 
   &:-moz-placeholder, &::-moz-placeholder, &:-ms-input-placeholder, &::-webkit-input-placeholder {
     color: #DDD;
-    font-family: 'Open Sans', "helvetica neue", sans-serif;
+    font-family: $font-family;
+    font-weight: normal;
   }
 }
 
@@ -157,6 +163,26 @@ div.location-input {
   &:hover {
     cursor: pointer;
   }
+}
+
+div.date-time-input {
+
+  text-align: center;
+
+  input {
+    &.date {
+      float: left;
+      width: 120px;
+    }
+    &.from {
+      width: 80px;
+    }
+    &.to {
+      float: right;
+      width: 80px;
+    }
+  }
+
 }
 
 

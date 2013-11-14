@@ -10,19 +10,34 @@ div.criteria-form(ng-class="{show: modalView == 'search'}")
 	form(ng-submit="searchParty()")
 		input(type="text", ng-model="form.title" placeholder="Let's be awesome tonight")
 		button.btn.btn-submit(type="submit") Search
+
 div.criteria-form(ng-class="{show: modalView == 'create'}")
 	form(ng-submit="createParty()")
 		div.header
 			h1 Create an event
 			button.close(type="button", ng-click="modalView = ''") &times;
+
+		input(type="text", ng-model="create_form.name", placeholder="Name")
+		br
+
 		div.location-input
-			input(type="text", ng-model="form.location.address", placeholder="{{locationPlaceholder}}", onblurgeocode)
-			div.current-location(currentlocation)
+			input(type="text", ng-model="create_form.location.address", placeholder="{{locationPlaceholder}}", onblurgeocode, form="create_form")
+			div.current-location(currentlocation, form="create_form")
 				img(src="/img/current-location.svg", height="20px", width="20px")
-		input(type="text", ng-model="form.title", placeholder="Title")
+		div.date-time-input
+			input.date(type="text", ui-date="{minDate: today, dateFormat: 'M d, yy'}", ng-model="create_form.raw_date", placeholder="Date")
+			input.from(type="text", ng-model="create_form.from", placeholder="From")
+			input.to(type="text", ng-model="create_form.from", placeholder="To")
+
+		input(type="text", ng-model="create_form.description", placeholder="Description")
 		br
-		input(type="text", ng-model="form.description", placeholder="Description")
-		br
+
+		//- select(ui-select2='ui-select2', ng-model='select2', data-placeholder='Pick a number')
+		//- 	option(value='')
+		//- 	option(value='one') First
+		//- 	option(value='two') Second
+		//- 	option(value='three') Third
+
 		button.btn.btn-submit(type="submit") Create Event
 
 div#event-map.event-map(eventmap)

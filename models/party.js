@@ -4,9 +4,10 @@ var mongoose = require('mongoose')
 
 
 var partySchema = new Schema({
-    title:        	String
-    , description:  String
+    name:        	String
+    , date_time: 	{}
     , location:		{}
+    //, description:  String
 });
 
 module.exports = Common.mongoose.model('Party', partySchema);

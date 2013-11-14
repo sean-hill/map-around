@@ -21,12 +21,15 @@ angular.module('myapp.directives', [])
 	.directive('currentlocation', function() {
         return function(scope, element, attrs) {
 
+			var geocoder = new google.maps.Geocoder();
+        	var form = attrs.form;
+
 			if (!navigator.geolocation) {
 				element.hide();
 			}
 			else {
 				element.click(function(){
-					scope.form.location.address = undefined;
+					scope[form].location.address = undefined;
 					scope.locationPlaceholder = "Loading location...";
 					scope.$apply();
 
@@ -35,14 +38,13 @@ angular.module('myapp.directives', [])
 						var lat = position.coords.latitude;
 						var lng = position.coords.longitude;
 
-						var geocoder = new google.maps.Geocoder();
 						var latlng = new google.maps.LatLng(lat,lng);
 
 						geocoder.geocode({'latLng': latlng}, function(results, status) {
 							if (status == google.maps.GeocoderStatus.OK) {
 								if (results[0]) {
-									scope.form.location.address = results[0].formatted_address;
-									scope.form.location.latlng = [
+									scope[form].location.address = results[0].formatted_address;
+									scope[form].location.latlng = [
 										results[0].geometry.location.lng(),
 										results[0].geometry.location.lat()
 									];
@@ -67,21 +69,29 @@ angular.module('myapp.directives', [])
     .directive('onblurgeocode', function() {
         return function(scope, element, attrs) {
 
+			var geocoder = new google.maps.Geocoder();
+			var form = attrs.form;
+
         	element.blur(function(){
-				var geocoder = new google.maps.Geocoder();
-				geocoder.geocode( { 'address': scope.form.location.address}, function(results, status) {
-					if (status == google.maps.GeocoderStatus.OK) {
-						scope.form.location.address = results[0].formatted_address;
-						scope.form.location.latlng = [
-							results[0].geometry.location.lng(),
-							results[0].geometry.location.lat() 
-						];
-						console.log(scope.form.location);
-						scope.$apply();
-					} else {
-						alert('Geocode was not successful for the following reason: ' + status);
-					}
-				});
+
+        		if (scope[form].location.address) {
+
+					geocoder.geocode( { 'address': scope[form].location.address}, function(results, status) {
+						if (status == google.maps.GeocoderStatus.OK) {
+							scope[form].location.address = results[0].formatted_address;
+							scope[form].location.latlng = [
+								results[0].geometry.location.lng(),
+								results[0].geometry.location.lat() 
+							];
+							console.log(scope[form].location);
+							scope.$apply();
+						} else {
+							alert('Geocode was not successful for the following reason: ' + status);
+						}
+					});
+
+        		}
+
         	});
         };
     })
