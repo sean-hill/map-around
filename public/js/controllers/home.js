@@ -16,7 +16,8 @@ function HomeCtrl($scope, $http) {
 	$scope.searchParty = function() {
 		$http.post('/api/searchParty', {party: $scope.form}).success(function(data){
 			if(data.success) {
-				console.log("successful print")
+				$scope.modalView = "";
+				alertify.success("Search Performed");
 			}
 		});
 	}

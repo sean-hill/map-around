@@ -9,7 +9,11 @@ angular.module('myapp.directives', [])
 				var mapOptions = {
 					center: new google.maps.LatLng(40.2444, -111.6608),
 					zoom: 10,
-					mapTypeId: google.maps.MapTypeId.ROADMAP
+					mapTypeId: google.maps.MapTypeId.ROADMAP,
+					mapTypeControlOptions: {
+						style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+						position: google.maps.ControlPosition.TOP_CENTER
+					}
 				};
 				var map = new google.maps.Map(document.getElementById("event-map"), mapOptions);
 			}
