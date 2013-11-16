@@ -1,4 +1,4 @@
-select.from(ui-select2='ui-select2', ng-model='create_form.from', data-placeholder='From')
+select.from(ui-select2='ui-select2', ng-model='create_form.from', data-placeholder='From', ng-change="changeFromTime()")
 	option(value='')
 	option(value='0:00') 12:00 am
 	option(value='0:30') 12:30 am
