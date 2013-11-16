@@ -297,7 +297,6 @@
 ----------------------------------*/
 
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
-  border: 1px solid #dddddd;
   color: $main-color;
 }
 
@@ -312,9 +311,9 @@
 }
 
 .ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus {
-  border: 1px solid $main-color;
   background: $main-color;
   color: #ffffff;
+  @include border-radius(3px);
 }
 
 .ui-state-hover a {
@@ -327,9 +326,7 @@
 }
 
 .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
-  border: 1px solid #dddddd;
   background: white;
-  
   color: #ffa955;
 }
 
@@ -346,7 +343,6 @@
 ----------------------------------*/
 
 .ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
-  border: 1px solid #cccccc;
   background: white;
   color: $font-color;
 }

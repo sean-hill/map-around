@@ -117,14 +117,14 @@ $to-screen-edge: 8px;
   }
 
   input {
-    width: 300px;
+    width: 340px;
   }
 }
 
 input {
   margin: 0;
   padding: 8px 10px;
-  border: 2px solid #DDD;
+  border: 1px solid #DDD;
   border-radius: 4px;
   font-size: 14px;
   color: #333;
@@ -169,18 +169,16 @@ div.date-time-input {
 
   text-align: center;
 
-  input {
-    &.date {
-      float: left;
-      width: 120px;
-    }
-    &.from {
-      width: 80px;
-    }
-    &.to {
-      float: right;
-      width: 80px;
-    }
+  .date {
+    float: left;
+    width: 120px;
+  }
+  .from {
+    width: 105px;
+  }
+  .to {
+    float: right;
+    width: 105px;
   }
 
 }

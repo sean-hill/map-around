@@ -26,17 +26,11 @@ div.criteria-form(ng-class="{show: modalView == 'create'}")
 				img(src="/img/current-location.svg", height="20px", width="20px")
 		div.date-time-input
 			input.date(type="text", ui-date="{minDate: today, dateFormat: 'M d, yy'}", ng-model="create_form.raw_date", placeholder="Date")
-			input.from(type="text", ng-model="create_form.from", placeholder="From")
-			input.to(type="text", ng-model="create_form.from", placeholder="To")
+			include from_select
+			include to_select
 
-		input(type="text", ng-model="create_form.description", placeholder="Description")
+		input(type="text", ng-model="create_form.description", placeholder="Pick a number")
 		br
-
-		//- select(ui-select2='ui-select2', ng-model='select2', data-placeholder='Pick a number')
-		//- 	option(value='')
-		//- 	option(value='one') First
-		//- 	option(value='two') Second
-		//- 	option(value='three') Third
 
 		button.btn.btn-submit(type="submit") Create Event
 
