@@ -97,7 +97,6 @@ $to-screen-edge: 8px;
   overflow: hidden;
   padding: 15px;
   right: $to-screen-edge;
-  opacity: .7;
 
   @include transition(100ms all linear);
   @include border-radius(5px);
@@ -110,10 +109,6 @@ $to-screen-edge: 8px;
       display: inline-block;  
       font-weight: lighter;
     }
-  }
-
-  &:hover {
-    opacity: 1;
   }
 
   input {

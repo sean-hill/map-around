@@ -85,7 +85,7 @@
 }
 
 .ui-datepicker {
-  width: 17em;
+  width: 14em;
   padding: .2em .2em 0;
   display: none;
   .ui-datepicker-header {
@@ -117,9 +117,9 @@
   .ui-datepicker-prev span, .ui-datepicker-next span {
     display: block;
     position: absolute;
-    left: 65%;
+    left: 71%;
     margin-left: -8px;
-    top: 32%;
+    top: 38%;
     margin-top: -8px;
   }
   .ui-datepicker-title {
@@ -159,6 +159,7 @@
       padding: .2em;
       text-align: center;
       text-decoration: none;
+      width: 20px;
     }
   }
   .ui-datepicker-buttonpane {
@@ -265,7 +266,7 @@
 
 .ui-widget {
   font-family: $font-family;
-  font-size: 1.1em;
+  font-size: 14px;
   .ui-widget {
     font-size: 1em;
   }

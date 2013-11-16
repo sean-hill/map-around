@@ -7,11 +7,43 @@ function HomeCtrl($scope, $http) {
 	
 	$scope.createParty = function() {
 
-		// TODO: turn .raw_date into start and end date
+		var startDate;
+		var endDate;
+
+		if ($scope.create_form.from && $scope.create_form.to) {
+
+			// Make the start date
+			var hoursAndMinutes = $scope.create_form.from.split(":");
+			startDate = new Date($scope.create_form.raw_date.getTime());
+			startDate.addHours(hoursAndMinutes[0]);
+			startDate.addMinutes(hoursAndMinutes[1]);
+
+
+			// Make the end date
+			hoursAndMinutes = $scope.create_form.to.split(":");
+			endDate = new Date($scope.create_form.raw_date.getTime());
+			endDate.addHours(hoursAndMinutes[0]);
+			endDate.addMinutes(hoursAndMinutes[1]);
+
+
+		} else {
+
+			startDate = new Date($scope.create_form.raw_date);
+			endDate = new Date($scope.create_form.raw_date);
+			endDate.addHours(23);
+			endDate.addMinutes(59);
+
+		}
+
+		console.log(startDate.toFormat("MMM D, YYYY -- H:MI PP"));
+		console.log(endDate.toFormat("MMM D, YYYY -- H:MI PP"));
+
+		$scope.create_form.date_time = {start_date: startDate, end_date: endDate};
 
 		$http.post('/api/createParty', {party: $scope.create_form}).success(function(data){
 			if (data.success) {
 				$scope.modalView = "";
+				$scope.create_form = {};
 				alertify.success("Event created");
 			}
 		});
