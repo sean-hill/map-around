@@ -34,4 +34,4 @@ div.criteria-form(ng-class="{show: modalView == 'create'}")
 
 		button.btn.btn-submit(type="submit") Create Event
 
-div#event-map.event-map(eventmap)
+div.event-map(ng-controller="PartyMapCtrl", ui-map="partyMap", ui-options="mapOptions")
