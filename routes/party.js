@@ -1,8 +1,6 @@
 // Create a new party
 exports.createParty = function(req, res) {
 
-	console.log(req.body.party);
-
 	new Model.Party(req.body.party).save(function(err){
 
 		if(err) return res.send({success: false, msg: "Error creating party"});
@@ -14,6 +12,8 @@ exports.createParty = function(req, res) {
 
 //Search for parties
 exports.searchParty = function(req, res) {
+
+	// Here's the query you'll want! :) .find({"location.latlng" : {$near: [<LONGITUDE>, <LATITUDE>], $maxDistance: 1}})
 
 	Model.Party.find(req.body.party, function(err, result) {
 		console.log(result);
