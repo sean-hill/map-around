@@ -1,10 +1,10 @@
 div.navbar
-	a.brand(href="/") Going On
+	a.brand(href="/") Map Around
 	div.nav-actions
 		ul.nav-list
 			li: button.btn(ng-click="modalView = 'search'", ng-class="{active: modalView == 'search'}") Search
 			li: button.btn(ng-click="modalView = 'create'", ng-class="{active: modalView == 'create'}") Create
-			li: button.btn Sign In
+			//- li: button.btn Sign In
 
 div.criteria-form(ng-class="{show: modalView == 'search'}")
 	form(ng-submit="searchParty()")

@@ -43,7 +43,7 @@ function HomeCtrl($scope, $http) {
 		$http.post('/api/createParty', {party: $scope.create_form}).success(function(data){
 			if (data.success) {
 				$scope.modalView = "";
-				$scope.create_form = {};
+				$scope.create_form = {location: {}};
 				alertify.success("Event created");
 			}
 		});
