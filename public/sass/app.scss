@@ -1,6 +1,7 @@
 html, body {
   margin: 0px;
   font-family: $font-family;
+  color: $font-color;
 }
 
 a {
@@ -138,6 +139,17 @@ input {
     font-family: $font-family;
     font-weight: normal;
   }
+
+  
+}
+
+.alert-error {
+  font-size: 14px;
+  background: rgba($error-color, .4);
+  border: 1px solid $error-color;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  @include border-radius(4px);
 }
 
 div.location-input {

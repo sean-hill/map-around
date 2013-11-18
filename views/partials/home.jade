@@ -17,7 +17,7 @@ div.criteria-form(ng-class="{show: modalView == 'create'}")
 			h1 Create an event
 			button.close(type="button", ng-click="modalView = ''") &times;
 
-		input(type="text", ng-model="create_form.name", placeholder="Name")
+		input(type="text", ng-model="create_form.name", placeholder="Name", ng-class="{error: errors.name}")
 		br
 
 		div.location-input
@@ -32,6 +32,8 @@ div.criteria-form(ng-class="{show: modalView == 'create'}")
 		input(type="text", ng-model="create_form.description", placeholder="Description")
 		br
 
+		div.alert-error(ui-if="validateCreateForm") Fill in a name, location, and date for the event
+
 		button.btn.btn-submit(type="submit") Create Event
 
-div.event-map(ng-controller="PartyMapCtrl", ui-map="partyMap", ui-options="mapOptions")
+div.event-map(ui-map="partyMap", ui-options="mapOptions")

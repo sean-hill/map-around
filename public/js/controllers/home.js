@@ -1,11 +1,19 @@
 function HomeCtrl($scope, $http) {
 
 	$scope.create_form = {location: {}};
+	$scope.errors = {};
 	$scope.form = {};
 	$scope.locationPlaceholder = "Location";
 	$scope.today = new Date();
 	
 	$scope.createParty = function() {
+
+		if (!$scope.create_form.name || !$scope.create_form.location || !$scope.create_form.raw_date) {
+			$scope.validateCreateForm = true;
+			return;
+		} else {
+			$scope.validateCreateForm = false;
+		}
 
 		var startDate;
 		var endDate;
@@ -24,7 +32,6 @@ function HomeCtrl($scope, $http) {
 			endDate = new Date($scope.create_form.raw_date.getTime());
 			endDate.addHours(hoursAndMinutes[0]);
 			endDate.addMinutes(hoursAndMinutes[1]);
-
 
 		} else {
 
@@ -75,56 +82,41 @@ function HomeCtrl($scope, $http) {
 		});
 	}
 
+	// Original options for the "To" dropdown. We use this as a template for the $scope.toOptions
 	var toOriginalOptions = [
-		{key:'0:00', value: '12:00 am'},
-		{key:'0:30', value: '12:30 am'},
-		{key:'1:00', value: '1:00 am'},
-		{key:'1:30', value: '1:30 am'},
-		{key:'2:00', value: '2:00 am'},
-		{key:'2:30', value: '2:30 am'},
-		{key:'3:00', value: '3:00 am'},
-		{key:'3:30', value: '3:30 am'},
-		{key:'4:00', value: '4:00 am'},
-		{key:'4:30', value: '4:30 am'},
-		{key:'5:00', value: '5:00 am'},
-		{key:'5:30', value: '5:30 am'},
-		{key:'6:00', value: '6:00 am'},
-		{key:'6:30', value: '6:30 am'},
-		{key:'7:00', value: '7:00 am'},
-		{key:'7:30', value: '7:30 am'},
-		{key:'8:00', value: '8:00 am'},
-		{key:'8:30', value: '8:30 am'},
-		{key:'9:00', value: '9:00 am'},
-		{key:'9:30', value: '9:30 am'},
-		{key:'10:00', value: '10:00 am'},
-		{key:'10:30', value: '10:30 am'},
-		{key:'11:00', value: '11:00 am'},
-		{key:'11:30', value: '11:30 am'},
-		{key:'12:00', value: '12:00 pm'},
-		{key:'12:30', value: '12:30 pm'},
-		{key:'13:00', value: '1:00 pm'},
-		{key:'13:30', value: '1:30 pm'},
-		{key:'14:00', value: '2:00 pm'},
-		{key:'14:30', value: '2:30 pm'},
-		{key:'15:00', value: '3:00 pm'},
-		{key:'15:30', value: '3:30 pm'},
-		{key:'16:00', value: '4:00 pm'},
-		{key:'16:30', value: '4:30 pm'},
-		{key:'17:00', value: '5:00 pm'},
-		{key:'17:30', value: '5:30 pm'},
-		{key:'18:00', value: '6:00 pm'},
-		{key:'18:30', value: '6:30 pm'},
-		{key:'19:00', value: '7:00 pm'},
-		{key:'19:30', value: '7:30 pm'},
-		{key:'20:00', value: '8:00 pm'},
-		{key:'20:30', value: '8:30 pm'},
-		{key:'21:00', value: '9:00 pm'},
-		{key:'21:30', value: '9:30 pm'},
-		{key:'22:00', value: '10:00 pm'},
-		{key:'22:30', value: '10:30 pm'},
-		{key:'23:00', value: '11:00 pm'},
-		{key:'23:30', value: '11:30 pm'}
+		{key:'0:00', value: '12:00 am'},{key:'0:30', value: '12:30 am'},{key:'1:00', value: '1:00 am'},{key:'1:30', value: '1:30 am'},{key:'2:00', value: '2:00 am'},{key:'2:30', value: '2:30 am'},{key:'3:00', value: '3:00 am'},{key:'3:30', value: '3:30 am'},{key:'4:00', value: '4:00 am'},{key:'4:30', value: '4:30 am'},{key:'5:00', value: '5:00 am'},{key:'5:30', value: '5:30 am'},{key:'6:00', value: '6:00 am'},{key:'6:30', value: '6:30 am'},{key:'7:00', value: '7:00 am'},{key:'7:30', value: '7:30 am'},{key:'8:00', value: '8:00 am'},{key:'8:30', value: '8:30 am'},{key:'9:00', value: '9:00 am'},{key:'9:30', value: '9:30 am'},{key:'10:00', value: '10:00 am'},{key:'10:30', value: '10:30 am'},{key:'11:00', value: '11:00 am'},{key:'11:30', value: '11:30 am'},{key:'12:00', value: '12:00 pm'},{key:'12:30', value: '12:30 pm'},{key:'13:00', value: '1:00 pm'},{key:'13:30', value: '1:30 pm'},{key:'14:00', value: '2:00 pm'},{key:'14:30', value: '2:30 pm'},{key:'15:00', value: '3:00 pm'},{key:'15:30', value: '3:30 pm'},{key:'16:00', value: '4:00 pm'},{key:'16:30', value: '4:30 pm'},{key:'17:00', value: '5:00 pm'},{key:'17:30', value: '5:30 pm'},{key:'18:00', value: '6:00 pm'},{key:'18:30', value: '6:30 pm'},{key:'19:00', value: '7:00 pm'},{key:'19:30', value: '7:30 pm'},{key:'20:00', value: '8:00 pm'},{key:'20:30', value: '8:30 pm'},{key:'21:00', value: '9:00 pm'},{key:'21:30', value: '9:30 pm'},{key:'22:00', value: '10:00 pm'},{key:'22:30', value: '10:30 pm'},{key:'23:00', value: '11:00 pm'},{key:'23:30', value: '11:30 pm'}
 	];
 
 	$scope.toOptions = toOriginalOptions;
+
+
+
+
+
+	// Map functions and variables =======================================================================
+
+	// Start centering on the USA
+	var ll = new google.maps.LatLng(37.09024, -95.7128910);
+
+	// Party map options
+    $scope.mapOptions = {
+        center: ll,
+        zoom: 4,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        mapTypeControlOptions: {
+			style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+			position: google.maps.ControlPosition.TOP_CENTER
+		}
+    };
+
+    $scope.partyMarkers = [];
+
+    // If we can use their browser's location, center to there
+    if (navigator.geolocation) {
+		navigator.geolocation.getCurrentPosition(function (position) {
+			initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+			$scope.partyMap.setCenter(initialLocation);
+			$scope.partyMap.setZoom(11);
+		});
+	}
 }
