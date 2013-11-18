@@ -8,7 +8,10 @@ div.navbar
 
 div.criteria-form(ng-class="{show: modalView == 'search'}")
 	form(ng-submit="searchParty()")
-		input(type="text", ng-model="form.title" placeholder="Let's be awesome tonight")
+		div.location-input
+			input(type="text", ng-model="search_form.location.address", placeholder="{{locationPlaceholder}}", onblurgeocode, form="search_form")
+			div#search_location.current-location(currentlocation, form="search_form")
+				img(src="/img/current-location.svg", height="20px", width="20px")
 		button.btn.btn-submit(type="submit") Search
 
 div.criteria-form(ng-class="{show: modalView == 'create'}")

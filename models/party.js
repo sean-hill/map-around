@@ -6,7 +6,7 @@ var mongoose = require('mongoose')
 var partySchema = new Schema({
     name:        	String
     , date_time: 	{start_date: Date, end_date: Date}
-    , location:		{latlng: []}
+    , location:		{latlng: [], address: String}
     , description:  String
 });
 

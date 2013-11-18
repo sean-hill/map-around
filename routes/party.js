@@ -12,14 +12,13 @@ exports.createParty = function(req, res) {
 
 //Search for parties
 exports.searchParty = function(req, res) {
-
-	// Here's the query you'll want! :) .find({"location.latlng" : {$near: [<LONGITUDE>, <LATITUDE>], $maxDistance: 1}})
-
-	Model.Party.find(req.body.party, function(err, result) {
-		console.log(result);
-
+	
+	var searchData = req.body.search;
+	//TODO: figure out max distance (should be in meters can calulate from map)
+	
+	Model.Party.find({"location.latlng" : {$near: searchData.location.latlng, $maxDistance: 100}}, function(err, parties){
 		if(err) return res.send({success: false, msg: "404 Party Not Found"});
 
-		return res.send({success: true, msg: "Party Found", party: result});
+		return res.send({success: true, msg: "Parties Found", parties: parties});
 	});
 };

@@ -2,7 +2,7 @@ function HomeCtrl($scope, $http) {
 
 	$scope.create_form = {location: {}};
 	$scope.errors = {};
-	$scope.form = {};
+	$scope.search_form = {location: {}};
 	$scope.locationPlaceholder = "Location";
 	$scope.today = new Date();
 	
@@ -74,8 +74,20 @@ function HomeCtrl($scope, $http) {
 	}
 
 	$scope.searchParty = function() {
-		$http.post('/api/searchParty', {party: $scope.form}).success(function(data){
+
+		$http.post('/api/searchParty', {search: $scope.search_form}).success(function(data){
+			
 			if(data.success) {
+
+				$scope.partyMarkers = [];
+
+				angular.forEach(data.parties, function(party){
+					$scope.partyMarkers.push(new google.maps.Marker({
+		                map: $scope.partyMap,
+		                position: new google.maps.LatLng(party.location.latlng[1], party.location.latlng[0])
+		            }))
+				});
+
 				$scope.modalView = "";
 				alertify.success("Search Performed");
 			}
@@ -114,9 +126,14 @@ function HomeCtrl($scope, $http) {
     // If we can use their browser's location, center to there
     if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(function (position) {
+			console.log(position);
 			initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 			$scope.partyMap.setCenter(initialLocation);
 			$scope.partyMap.setZoom(11);
+			$scope.search_form.location = {
+				latlng: [position.coords.longitude, position.coords.latitude]
+			};
+			$scope.searchParty();
 		});
 	}
 }
