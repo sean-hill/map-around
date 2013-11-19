@@ -1,10 +1,12 @@
-function HomeCtrl($scope, $http) {
+function HomeCtrl($scope, $http, $timeout, geocoder) {
 
 	$scope.create_form = {location: {}};
-	$scope.errors = {};
 	$scope.search_form = {location: {}};
+	$scope.errors = {};
 	$scope.locationPlaceholder = "Location";
 	$scope.today = new Date();
+
+
 	
 	$scope.createParty = function() {
 
@@ -79,7 +81,7 @@ function HomeCtrl($scope, $http) {
 			
 			if(data.success) {
 
-				$scope.partyMarkers = [];
+				$scope.clearMarkers();
 
 				angular.forEach(data.parties, function(party){
 					$scope.partyMarkers.push(new google.maps.Marker({
@@ -126,14 +128,37 @@ function HomeCtrl($scope, $http) {
     // If we can use their browser's location, center to there
     if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(function (position) {
-			console.log(position);
 			initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 			$scope.partyMap.setCenter(initialLocation);
 			$scope.partyMap.setZoom(11);
-			$scope.search_form.location = {
-				latlng: [position.coords.longitude, position.coords.latitude]
-			};
-			$scope.searchParty();
+
+			console.log("Got client location");
+
+			geocoder.getGeoFromLatLng(position.coords.latitude, position.coords.longitude, function(geo){
+				
+				$scope.search_form = {
+					location: {
+						latlng: [position.coords.longitude, position.coords.latitude]
+						, address: geo ? geo.address : undefined
+					}
+					, distance: 5
+				};
+
+				$scope.searchParty();
+
+			});
 		});
 	}
+
+	$scope.clearMarkers = function() {
+		for (var i = 0; i < $scope.partyMarkers.length; i++) {
+			$scope.partyMarkers[i].setMap(null);
+		}
+		$scope.partyMarkers = [];
+	}
+
+	$scope.onMapIdle = function() {
+		console.log("Map has idled");
+	}
+
 }

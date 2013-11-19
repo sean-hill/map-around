@@ -87,7 +87,6 @@ angular.module('myapp.directives', [])
 								results[0].geometry.location.lng(),
 								results[0].geometry.location.lat() 
 							];
-							console.log(scope[form].location);
 							scope.$apply();
 						} else {
 							alert('Geocode was not successful for the following reason: ' + status);

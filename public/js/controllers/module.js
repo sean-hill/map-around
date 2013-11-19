@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('myapp', ['myapp.directives', 'ui']).
+angular.module('myapp', ['myapp.directives', 'ui', 'myapp.services']).
   config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
   	// Url, view, ctrl
     $routeProvider.when('/', {templateUrl: 'partials/home', controller: HomeCtrl});

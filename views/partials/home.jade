@@ -1,5 +1,7 @@
 div.navbar
-	a.brand(href="/") Map Around
+	a.brand(href="/") 
+		img(src="/img/logo.svg", height="25px", width="25px")
+		span Map Around
 	div.nav-actions
 		ul.nav-list
 			li: button.btn(ng-click="modalView = 'search'", ng-class="{active: modalView == 'search'}") Search
@@ -8,10 +10,18 @@ div.navbar
 
 div.criteria-form(ng-class="{show: modalView == 'search'}")
 	form(ng-submit="searchParty()")
+		div.header
+			h1 Search for events
+			button.close(type="button", ng-click="modalView = ''") &times;
+
 		div.location-input
 			input(type="text", ng-model="search_form.location.address", placeholder="{{locationPlaceholder}}", onblurgeocode, form="search_form")
 			div#search_location.current-location(currentlocation, form="search_form")
 				img(src="/img/current-location.svg", height="20px", width="20px")
+
+		div.distance-input
+			input(type="number", ng-model="search_form.distance", placeholder="Distance")
+			div.description Distance from location (in miles)	
 		button.btn.btn-submit(type="submit") Search
 
 div.criteria-form(ng-class="{show: modalView == 'create'}")
@@ -27,6 +37,7 @@ div.criteria-form(ng-class="{show: modalView == 'create'}")
 			input(type="text", ng-model="create_form.location.address", placeholder="{{locationPlaceholder}}", onblurgeocode, form="create_form")
 			div.current-location(currentlocation, form="create_form")
 				img(src="/img/current-location.svg", height="20px", width="20px")
+
 		div.date-time-input
 			input.date(type="text", ui-date="{minDate: today, dateFormat: 'M d, yy'}", ng-model="create_form.raw_date", placeholder="Date")
 			include from_select
@@ -39,4 +50,4 @@ div.criteria-form(ng-class="{show: modalView == 'create'}")
 
 		button.btn.btn-submit(type="submit") Create Event
 
-div.event-map(ui-map="partyMap", ui-options="mapOptions")
+div.event-map(ui-map="partyMap", ui-options="mapOptions", ui-event="{'map-idle': 'onMapIdle()'}")

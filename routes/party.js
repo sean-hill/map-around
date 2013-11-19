@@ -14,11 +14,18 @@ exports.createParty = function(req, res) {
 exports.searchParty = function(req, res) {
 	
 	var searchData = req.body.search;
-	//TODO: figure out max distance (should be in meters can calulate from map)
+	var query = {"location.latlng" : {$near: searchData.location.latlng, $maxDistance: milesToRadians(searchData.distance)}};
 	
-	Model.Party.find({"location.latlng" : {$near: searchData.location.latlng, $maxDistance: 100}}, function(err, parties){
-		if(err) return res.send({success: false, msg: "404 Party Not Found"});
+	Model.Party.find(query, function(err, parties){
+
+		if(err) return res.send({success: false, msg: "No parties found"});
 
 		return res.send({success: true, msg: "Parties Found", parties: parties});
+		
 	});
 };
+
+milesToRadians = function (miles) {
+  var EARTH_RADIUS_MILES = 3959 * (3.14/180); // miles
+  return miles / EARTH_RADIUS_MILES;
+}

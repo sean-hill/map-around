@@ -53,6 +53,16 @@ $to-screen-edge: 8px;
     padding: 6px 0px 0px $to-screen-edge;
     font-size: 25px;
     -webkit-font-smoothing: antialiased;
+
+    img {
+      margin-top: 7px;
+    }
+
+    span {
+      position: relative;
+      top: -4px;
+      left: 5px;
+    }
     
   }
 
@@ -186,6 +196,21 @@ div.date-time-input {
   .to {
     float: right;
     width: 105px;
+  }
+
+}
+
+div.distance-input {
+
+  input {
+    width: 100px;
+  }
+
+  div.description {
+    display: inline-block;
+    color: #B0B0B0;
+    font-size: 14px;
+    margin-left: 15px;
   }
 
 }
