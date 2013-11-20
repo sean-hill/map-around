@@ -19,10 +19,23 @@ div.criteria-form(ng-class="{show: modalView == 'search'}")
 			div#search_location.current-location(currentlocation, form="search_form")
 				img(src="/img/current-location.svg", height="20px", width="20px")
 
+		div.date-time-input.clearfix
+			input.date(type="text", ui-date="{minDate: today, maxDate: search_form.end_date, dateFormat: 'M d, yy'}", ng-model="search_form.start_date", placeholder="Start Date")
+			select.time-select(ui-select2='ui-select2', ng-model='search_form.from', data-placeholder='From')
+				include time_select
+			//- div.description.time-select Start date and time	
+
+		div.date-time-input.clearfix
+			input.date(type="text", ui-date="{minDate: search_form.start_date, dateFormat: 'M d, yy'}", ng-model="search_form.end_date", placeholder="End Date")
+			select.time-select(ui-select2='ui-select2', ng-model='search_form.to', data-placeholder='To')
+				include time_select
+			//- div.description.time-select End date and time
+
 		div.distance-input
-			input(type="number", ng-model="search_form.distance", placeholder="Distance")
-			div.description Distance from location (in miles)	
-		button.btn.btn-submit(type="submit") Search
+			input(type="text", ng-model="search_form.distance", placeholder="---", maxlength="2", onlynumbers)
+			div.description Distance from location (in miles)
+
+		button.btn.btn-submit(type="submit") Search Events
 
 div.criteria-form(ng-class="{show: modalView == 'create'}")
 	form(ng-submit="createParty()")
@@ -40,8 +53,11 @@ div.criteria-form(ng-class="{show: modalView == 'create'}")
 
 		div.date-time-input
 			input.date(type="text", ui-date="{minDate: today, dateFormat: 'M d, yy'}", ng-model="create_form.raw_date", placeholder="Date")
-			include from_select
-			include to_select
+			select.from(ui-select2='ui-select2', ng-model='create_form.from', data-placeholder='From', ng-change="changeFromTime()")
+				include time_select
+			select.to(ui-select2='ui-select2', ng-model='create_form.to', data-placeholder='To')
+				option(value='')
+				option(ng-repeat="option in toOptions" value="{{option.key}}"){{option.value}}
 
 		input(type="text", ng-model="create_form.description", placeholder="Description")
 		br

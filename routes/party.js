@@ -1,3 +1,7 @@
+//////////////////////
+// Party Route File //
+//////////////////////
+
 // Create a new party
 exports.createParty = function(req, res) {
 
@@ -14,6 +18,7 @@ exports.createParty = function(req, res) {
 exports.searchParty = function(req, res) {
 	
 	var searchData = req.body.search;
+	console.log(searchData);
 	var query = {"location.latlng" : {$near: searchData.location.latlng, $maxDistance: milesToRadians(searchData.distance)}};
 	
 	Model.Party.find(query, function(err, parties){

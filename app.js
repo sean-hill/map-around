@@ -10,21 +10,26 @@ var express 	= require('express'),
 	Route 		= require('./route.js'),
 	Model 		= require('./model.js');
 
-// Compile our sass files into _style.css
-sass.render({
-	file: __dirname + '/public/sass/base.scss',
-	success: function(css){
-		// After compiling the SASS to CSS, write it to _app.css
-		fs.writeFile(__dirname + '/public/css/_app.css', css, function (err) {
+// Things to do only on development
+if (process.env.NODE_ENV === 'development'){
 
-			if (!err) console.log("Main CSS compiled");
-			else console.log(err)
-		});
-	},
-	error: function(err) {
-		console.log(err);
-	}
-});
+	// Compile our sass files into _style.css
+	sass.render({
+		file: __dirname + '/public/sass/base.scss',
+		success: function(css){
+			// After compiling the SASS to CSS, write it to _app.css
+			fs.writeFile(__dirname + '/public/css/_app.css', css, function (err) {
+
+				if (!err) console.log("Main CSS compiled");
+				else console.log(err)
+			});
+		},
+		error: function(err) {
+			console.log(err);
+		}
+	});
+
+}
 
 // Path to the public directory for serving js/css/img files
 var pub = __dirname + '/public';
@@ -61,8 +66,6 @@ app.configure('production', function(){
 	console.log("Prod development")
 });
 
-console.log('mongodb://' + Common.conf.mongo_config.auth.name + ':' + Common.conf.mongo_config.auth.pass + '@' + Common.conf.mongo_config.host + ':' + Common.conf.mongo_config.port + '/' + Common.conf.mongo_config.dbname);
-
 // Connect to our mongodb database
 Common.mongoose.connect('mongodb://' + Common.conf.mongo_config.auth.name + ':' + Common.conf.mongo_config.auth.pass + '@' + Common.conf.mongo_config.host + ':' + Common.conf.mongo_config.port + '/' + Common.conf.mongo_config.dbname, {db: {safe:true}});
 
@@ -93,8 +96,6 @@ app.get('/partials/:name', Route.index.partials);
 
 // Party requests
 app.post('/api/createParty', Route.party.createParty)
-
-// Party Search
 app.post('/api/searchParty', Route.party.searchParty)
 
 //

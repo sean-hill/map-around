@@ -33,6 +33,12 @@ td, th {
   display: block !important;
 }
 
+.clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
 // Navbar styles
 $nav-height: 50px;
 $nav-border-width: 3px;
@@ -182,6 +188,7 @@ div.location-input {
   }
 }
 
+$time-select-width: 105px;
 div.date-time-input {
 
   text-align: center;
@@ -191,11 +198,16 @@ div.date-time-input {
     width: 120px;
   }
   .from {
-    width: 105px;
+    width: $time-select-width;
   }
   .to {
     float: right;
-    width: 105px;
+    width: $time-select-width;
+  }
+  .time-select {
+    width: $time-select-width;
+    float: left;
+    margin-left: 15px;
   }
 
 }
@@ -203,16 +215,21 @@ div.date-time-input {
 div.distance-input {
 
   input {
-    width: 100px;
+    width: 40px;
   }
 
-  div.description {
-    display: inline-block;
-    color: #B0B0B0;
-    font-size: 14px;
-    margin-left: 15px;
-  }
+}
 
+div.description {
+  display: inline-block;
+  color: #B0B0B0;
+  font-size: 14px;
+  margin-left: 15px;
+
+  &.time-select {
+    width: 80px;
+    margin-left: 5px;
+  }
 }
 
 

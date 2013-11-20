@@ -6,8 +6,6 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 	$scope.locationPlaceholder = "Location";
 	$scope.today = new Date();
 
-
-	
 	$scope.createParty = function() {
 
 		if (!$scope.create_form.name || !$scope.create_form.location || !$scope.create_form.raw_date) {
@@ -90,6 +88,9 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 		            }))
 				});
 
+				var latlng = $scope.search_form.location.latlng;
+				$scope.partyMap.panTo(new google.maps.LatLng(latlng[1], latlng[0]));
+
 				$scope.modalView = "";
 				alertify.success("Search Performed");
 			}
@@ -128,11 +129,10 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
     // If we can use their browser's location, center to there
     if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(function (position) {
+			
 			initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 			$scope.partyMap.setCenter(initialLocation);
 			$scope.partyMap.setZoom(11);
-
-			console.log("Got client location");
 
 			geocoder.getGeoFromLatLng(position.coords.latitude, position.coords.longitude, function(geo){
 				
@@ -142,6 +142,10 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 						, address: geo ? geo.address : undefined
 					}
 					, distance: 5
+					, start_date: new Date()
+					, end_date: new Date().addDays(1)
+					, from: new Date().getHours() + ":00"
+					, to: new Date().addDays(1).getHours() + ":00"
 				};
 
 				$scope.searchParty();

@@ -2,26 +2,6 @@
 
 angular.module('myapp.directives', [])
 
-	.directive('eventmap', function() {
-        return function(scope, element, attrs) {
-
-			function initialize() {
-				var mapOptions = {
-					center: new google.maps.LatLng(40.2444, -111.6608),
-					zoom: 10,
-					mapTypeId: google.maps.MapTypeId.ROADMAP,
-					mapTypeControlOptions: {
-						style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-						position: google.maps.ControlPosition.TOP_CENTER
-					}
-				};
-				var map = new google.maps.Map(document.getElementById("event-map"), mapOptions);
-			}
-
- 			initialize();
-        };
-    })
-
 	.directive('currentlocation', function() {
         return function(scope, element, attrs) {
 
@@ -96,6 +76,17 @@ angular.module('myapp.directives', [])
         		}
 
         	});
+        };
+    })
+
+    .directive('onlynumbers', function() {
+        return function(scope, element, attrs) {
+
+        	element.keypress(function(evt){
+			    var charCode = (evt.which) ? evt.which : event.keyCode;
+		    	return !(charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57));
+			});
+ 	
         };
     })
 ;
