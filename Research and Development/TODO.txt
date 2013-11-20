@@ -1,0 +1,18 @@
+The things we must get done:
+	Search
+	Create
+
+Things we would like to get done (ordered)
+	Fetching events from public sources
+		http://api.eventful.com/
+		http://www.programmableweb.com/api/upcoming.org
+		http://www.programmableweb.com/api/zvents
+		http://www.programmableweb.com/api/eventbrite
+		http://blog.programmableweb.com/2012/05/01/93-events-apis-eventful-upcoming-google-calendar/
+		http://www.programmableweb.com/apis/directory/1?apicat=Events
+	User Account
+		sign in
+		manage my events
+			edit
+			delete
+			create
