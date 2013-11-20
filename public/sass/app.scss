@@ -232,6 +232,46 @@ div.description {
   }
 }
 
+div.block-selector {
+  border: 1px solid #DDD;
+  display: inline-block;
+  margin-bottom: 10px;
+  @include border-radius(4px);
+
+  .block {
+    padding: 8px 10px;
+    display: inline-block;
+    font-size: 14px;
+    border-right: 1px solid #DDD;
+    @include transition(100ms all linear);
+
+    &:not(.placeholder) {
+      width: 20px;
+      text-align: center;
+
+      &:hover {
+        background: $main-color;
+        color: white;
+        cursor: pointer;
+      }
+    }
+
+    &.active {
+      background: $main-color;
+      color: white;
+    }
+
+    &.placeholder {
+      padding-right: 20px;
+      color: #BBB;
+    }
+
+    &:last-child {
+      border-right: none;
+    }
+  }
+}
+
 
 // Button styles
 .btn {

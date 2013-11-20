@@ -19,7 +19,13 @@ exports.searchParty = function(req, res) {
 	
 	var searchData = req.body.search;
 	console.log(searchData);
-	var query = {"location.latlng" : {$near: searchData.location.latlng, $maxDistance: milesToRadians(searchData.distance)}};
+	var query = {
+		"location.latlng" : {$near: searchData.location.latlng, $maxDistance: milesToRadians(searchData.distance)}
+		//, "date_time.start_time" : 
+	};
+
+	// (EET > SST && EET <= SET) || (EST < SET && EST >= SST)
+	query
 	
 	Model.Party.find(query, function(err, parties){
 

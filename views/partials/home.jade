@@ -31,9 +31,15 @@ div.criteria-form(ng-class="{show: modalView == 'search'}")
 				include time_select
 			//- div.description.time-select End date and time
 
-		div.distance-input
-			input(type="text", ng-model="search_form.distance", placeholder="---", maxlength="2", onlynumbers)
-			div.description Distance from location (in miles)
+		div.block-selector
+			div.block.placeholder Miles
+			div.block(ng-click="search_form.distance = 1", ng-class="{active: search_form.distance == '1'}") 1
+			div.block(ng-click="search_form.distance = 5", ng-class="{active: search_form.distance == '5'}") 5
+			div.block(ng-click="search_form.distance = 10", ng-class="{active: search_form.distance == '10'}") 10
+			div.block(ng-click="search_form.distance = 30", ng-class="{active: search_form.distance == '30'}") 30
+			div.block(ng-click="search_form.distance = 50", ng-class="{active: search_form.distance == '50'}") 50
+
+		div.clearfix
 
 		button.btn.btn-submit(type="submit") Search Events
 
