@@ -336,3 +336,26 @@ button.close {
   border: 0;
   -webkit-appearance: none;
 }
+
+// Map styles //
+.party-info-window {
+  width: 300px;
+
+  h1, p {
+    font-family: $font-family;
+  }
+
+  h1 {
+    font-weight: normal;
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid #EEE;
+  }
+
+  .party-meta {
+    color: #BBB;
+    margin-top: 5px;
+  }
+}

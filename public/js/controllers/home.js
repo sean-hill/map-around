@@ -6,7 +6,8 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 	$scope.locationPlaceholder = "Location";
 	$scope.today = new Date();
 
-	var markerCluster = undefined;
+	var markerCluster;
+	var infoWindow;
 
 	$scope.createParty = function() {
 
@@ -19,6 +20,7 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 
 		var startDate;
 		var endDate;
+		var allDay = false;
 
 		if ($scope.create_form.from && $scope.create_form.to) {
 
@@ -41,13 +43,14 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 			endDate = new Date($scope.create_form.raw_date);
 			endDate.addHours(23);
 			endDate.addMinutes(59);
+			allDay = true;
 
 		}
 
 		console.log(startDate.toFormat("MMM D, YYYY -- H:MI PP"));
 		console.log(endDate.toFormat("MMM D, YYYY -- H:MI PP"));
 
-		$scope.create_form.date_time = {start_date: startDate, end_date: endDate};
+		$scope.create_form.date_time = {start_date: startDate, end_date: endDate, all_day: allDay};
 
 		$http.post('/api/createParty', {party: $scope.create_form}).success(function(data){
 			if (data.success) {
@@ -89,10 +92,13 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 
 					var marker = new google.maps.Marker({
 		                position: ll
+		              	, icon: new google.maps.MarkerImage('/img/marker.svg', null, null, null, new google.maps.Size(40,40))
 		            });
 
 					google.maps.event.addListener(marker, 'click', function() {
-						$scope.createPartyInfoWindow(party).open($scope.partyMap,marker);
+						infoWindow.close();
+						infoWindow.setContent($scope.getPartyWindowContent(party));
+						infoWindow.open($scope.partyMap, marker);
 					});
 
 					$scope.partyMarkers.push(marker)
@@ -100,13 +106,14 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 		            
 				});
 
-				$scope.initiateCluster();
+				$scope.initiateMapElements();
 				markerCluster.clearMarkers();
 				markerCluster.addMarkers($scope.partyMarkers);
 
 				var latlng = $scope.search_form.location.latlng;
 				$scope.partyMap.panTo(new google.maps.LatLng(latlng[1], latlng[0]));
-				$scope.partyMap.fitBounds(bounds);
+
+				//if ($scope.partyMarkers.length) $scope.partyMap.fitBounds(bounds);
 
 				$scope.modalView = "";
 				alertify.success("Search Performed");
@@ -178,10 +185,23 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 		$scope.partyMarkers = [];
 	}
 
-	$scope.initiateCluster = function() {
+	$scope.initiateMapElements = function() {
 		if (!markerCluster) {
-			var mcOptions = {gridSize: 50, maxZoom: 15};
+			var mcOptions = {
+				gridSize: 50
+				, maxZoom: 15
+				, styles: [{
+					height: 50
+					, width: 50
+					, textSize: 14
+					, textColor: "#333"
+					, url: "/img/cluster-icon.png"
+				}]
+			};
 			markerCluster = new MarkerClusterer($scope.partyMap, [], mcOptions);
+		}
+		if (!infoWindow) {
+			infoWindow = new google.maps.InfoWindow();
 		}
 	}
 
@@ -189,32 +209,26 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 		
 	}
 
-	$scope.createPartyInfoWindow = function(party) {
-		var contentString = '<div id="content">'+
-	      '<div id="siteNotice">'+
-	      '</div>'+
-	      '<h1 id="firstHeading" class="firstHeading">Uluru</h1>'+
-	      '<div id="bodyContent">'+
-	      '<p><b>Uluru</b>, also referred to as <b>Ayers Rock</b>, is a large ' +
-	      'sandstone rock formation in the southern part of the '+
-	      'Northern Territory, central Australia. It lies 335&#160;km (208&#160;mi) '+
-	      'south west of the nearest large town, Alice Springs; 450&#160;km '+
-	      '(280&#160;mi) by road. Kata Tjuta and Uluru are the two major '+
-	      'features of the Uluru - Kata Tjuta National Park. Uluru is '+
-	      'sacred to the Pitjantjatjara and Yankunytjatjara, the '+
-	      'Aboriginal people of the area. It has many springs, waterholes, '+
-	      'rock caves and ancient paintings. Uluru is listed as a World '+
-	      'Heritage Site.</p>'+
-	      '<p>Attribution: Uluru, <a href="http://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">'+
-	      'http://en.wikipedia.org/w/index.php?title=Uluru</a> '+
-	      '(last visited June 22, 2009).</p>'+
-	      '</div>'+
-	      '</div>';
+	$scope.getPartyWindowContent = function(party) {
 
-		  var infoWindow = new google.maps.InfoWindow({
-		      content: contentString
-		  });
-		return infoWindow;
+		var sD = new Date(party.date_time.start_date);
+		var eD = new Date(party.date_time.end_date);
+		var timeString = party.date_time.all_day ? 'All day' : sD.toFormat("H:MI P") + ' to ' + eD.toFormat("H:MI P") + '<br>' + sD.toFormat("MMM D, YYYY");
+
+		var contentString = 
+			'<div class="party-info-window">'+
+				'<h1 class="party-header">' + party.name + '</h1>'+
+				'<p class="party-meta">' + party.location.address + '<br>' + timeString + '</p>' +
+				'<hr>' +
+				'<div class="party-content">'+
+					'<p>' +
+						(party.description ? party.description : 'No description provided') +
+					'</p>' +
+					(party.url ? '<p>Link: <a href="' + party.url + '">' + party.url + '</a></p>' : '') 
+				'</div>'+
+		'</div>';
+
+		return contentString;
 	}
 
 }
