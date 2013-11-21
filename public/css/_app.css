@@ -25,6 +25,11 @@ td, th {
 .show {
   display: block !important; }
 
+.clearfix:after {
+  content: "";
+  display: table;
+  clear: both; }
+
 .navbar {
   height: 50px;
   background: #48b3cc;
@@ -38,6 +43,12 @@ td, th {
     padding: 6px 0px 0px 8px;
     font-size: 25px;
     -webkit-font-smoothing: antialiased; }
+    .navbar a.brand img {
+      margin-top: 7px; }
+    .navbar a.brand span {
+      position: relative;
+      top: -4px;
+      left: 5px; }
   .navbar div.nav-actions {
     float: right;
     margin: 8px 8px; }
@@ -146,6 +157,55 @@ div.date-time-input {
   div.date-time-input .to {
     float: right;
     width: 105px; }
+  div.date-time-input .time-select {
+    width: 105px;
+    float: left;
+    margin-left: 15px; }
+
+div.distance-input input {
+  width: 40px; }
+
+div.description {
+  display: inline-block;
+  color: #b0b0b0;
+  font-size: 14px;
+  margin-left: 15px; }
+  div.description.time-select {
+    width: 80px;
+    margin-left: 5px; }
+
+div.block-selector {
+  border: 1px solid #dddddd;
+  display: inline-block;
+  margin-bottom: 10px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px; }
+  div.block-selector .block {
+    padding: 8px 10px;
+    display: inline-block;
+    font-size: 14px;
+    border-right: 1px solid #dddddd;
+    -webkit-transition: 100ms all linear;
+    -moz-transition: 100ms all linear;
+    -o-transition: 100ms all linear;
+    -ms-transition: 100ms all linear;
+    transition: 100ms all linear; }
+    div.block-selector .block:not(.placeholder) {
+      width: 20px;
+      text-align: center; }
+      div.block-selector .block:not(.placeholder):hover {
+        background: #48b3cc;
+        color: white;
+        cursor: pointer; }
+    div.block-selector .block.active {
+      background: #48b3cc;
+      color: white; }
+    div.block-selector .block.placeholder {
+      padding-right: 20px;
+      color: #bbbbbb; }
+    div.block-selector .block:last-child {
+      border-right: none; }
 
 .btn {
   display: inline-block;
@@ -811,7 +871,7 @@ Version: 3.4.5 Timestamp: Mon Nov  4 08:22:42 PST 2013
 .select2-container .select2-choice {
   display: block;
   height: 26px;
-  padding: 4% 0 3% 8px;
+  padding: 5px 0 4px 8px;
   overflow: hidden;
   position: relative;
   border: 1px solid #dddddd;

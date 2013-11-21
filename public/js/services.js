@@ -9,6 +9,7 @@ angular.module('myapp.services', [])
 
 			geocoder.geocode({'latLng': latlng}, function(results, status) {
 				if (status == google.maps.GeocoderStatus.OK && results[0]) {
+						console.log(results);
 						return callback({
 							address: results[0].formatted_address
 							, lat: results[0].geometry.location.lat()
