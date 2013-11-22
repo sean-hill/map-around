@@ -7,6 +7,7 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 	$scope.today = new Date();
 
 	var markerCluster;
+	var markerSpider;
 	var infoWindow;
 
 	$scope.createParty = function() {
@@ -111,8 +112,16 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 
 					data.parties = data.parties.concat(events);
 
+					if (!data.parties.length) {
+						alertify.success("No events found, try different criteria");
+						return;
+					}
+
 					// Clear the map of it's markers
 					$scope.clearMarkers();
+
+					// Initiate needed map elements
+					$scope.initiateMapElements();
 
 					var bounds = new google.maps.LatLngBounds();
 
@@ -124,20 +133,27 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 			              	, icon: new google.maps.MarkerImage('/img/marker.svg', null, null, null, new google.maps.Size(40,40))
 			            });
 
-						google.maps.event.addListener(marker, 'click', function() {
+			            markerSpider.addListener('click', function(marker, event) {
 							infoWindow.close();
 							infoWindow.setContent($scope.getPartyWindowContent(party));
 							infoWindow.open($scope.partyMap, marker);
 						});
+
+						// google.maps.event.addListener(marker, 'click', function() {
+							
+						// });
 
 						$scope.partyMarkers.push(marker)
 			            bounds.extend(ll);
 			            
 					});
 
-					$scope.initiateMapElements();
 					markerCluster.clearMarkers();
 					markerCluster.addMarkers($scope.partyMarkers);
+
+					for (var i = 0; i < $scope.partyMarkers.length; i++) {
+						markerSpider.addMarker($scope.partyMarkers[i]);
+					};
 
 					var latlng = $scope.search_form.location.latlng;
 					$scope.partyMap.panTo(new google.maps.LatLng(latlng[1], latlng[0]));
@@ -155,7 +171,7 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 				});
 
 			} else {
-				alertify.success("No events found");				
+				alertify.success("Error searching for events");
 			}
 		});
 	}
@@ -171,6 +187,8 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 	$scope.getApiEvents = function(callback) {
 
 		var searchLatLng = $scope.search_form.location.latlng;
+		var ssd = $scope.search_form.start_date;
+		var eed = $scope.search_form.end_date;
 
 		// Search Eventful's API
 		var oArgs = {
@@ -178,7 +196,7 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 			, location: searchLatLng[1] + ", " + searchLatLng[0]
 			, within: $scope.search_form.distance
 			, page_size: 100
-			, date: "Future"
+			, date: ssd.toFormat("YYYYMMDD00") + "-" + eed.toFormat("YYYYMMDD00")
 			, mature: "safe"
 		};
 
@@ -193,15 +211,13 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 					name:        	event.title
 				    , date_time: 	{
 				    	start_date: event.start_time
-				    	, end_date: event.end_time
+				    	, end_date: event.stop_time
 				    	, all_day: event.all_day == "1" ? true : false
 				    }
 				    , location:		{latlng: [event.longitude, event.latitude], address: event.venue_name}
 				    , description:  event.description ? event.description.trim() : undefined
 				    , url: 			event.url
 				};
-
-				console.log(party);
 
 				eventFulEvents.push(party);
 			};
@@ -281,8 +297,19 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 			};
 			markerCluster = new MarkerClusterer($scope.partyMap, [], mcOptions);
 		}
+
 		if (!infoWindow) {
 			infoWindow = new google.maps.InfoWindow();
+		}
+
+		if (!markerSpider) {
+			var msOptions = {
+				keepSpiderfied: true
+			}
+			markerSpider = new OverlappingMarkerSpiderfier($scope.partyMap, msOptions);
+			markerSpider.addListener('spiderfy', function(markers) {
+				infoWindow.close();
+			})
 		}
 	}
 

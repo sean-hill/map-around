@@ -31,7 +31,7 @@ exports.searchParty = function(req, res) {
 
 	Model.Party.find(query, function(err, parties){
 
-		if(err || !parties.length) return res.send({success: false, msg: "No parties found"});
+		if(err) return res.send({success: false, msg: "No parties found"});
 
 		return res.send({success: true, msg: "Parties Found", parties: parties});
 		
