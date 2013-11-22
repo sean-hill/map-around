@@ -358,4 +358,10 @@ button.close {
     color: #BBB;
     margin-top: 5px;
   }
+
+  .party-link {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
 }

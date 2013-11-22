@@ -18,18 +18,20 @@ exports.createParty = function(req, res) {
 exports.searchParty = function(req, res) {
 	
 	var searchData = req.body.search;
-	console.log(searchData);
+	var searchStart = new Date(searchData.start_date);
+	var searchEnd = new Date(searchData.end_date);
+
+	// ESD is not > SED and EED is not <= SSD
+
 	var query = {
 		"location.latlng" : {$near: searchData.location.latlng, $maxDistance: milesToRadians(searchData.distance)}
-		//, "date_time.start_time" : 
+		, "date_time.start_date" : { $not : { $gt : searchEnd } }
+		, "date_time.end_date" : { $not: { $lte : searchStart } }
 	};
 
-	// (EET > SST && EET <= SET) || (EST < SET && EST >= SST)
-	query
-	
 	Model.Party.find(query, function(err, parties){
 
-		if(err) return res.send({success: false, msg: "No parties found"});
+		if(err || !parties.length) return res.send({success: false, msg: "No parties found"});
 
 		return res.send({success: true, msg: "Parties Found", parties: parties});
 		

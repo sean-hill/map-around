@@ -8,6 +8,7 @@ var partySchema = new Schema({
     , date_time: 	{start_date: Date, end_date: Date, all_day: Boolean}
     , location:		{latlng: [], address: String}
     , description:  String
+    , url: 			String
 });
 
 partySchema.index ({

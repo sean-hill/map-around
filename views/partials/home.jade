@@ -41,6 +41,8 @@ div.criteria-form(ng-class="{show: modalView == 'search'}")
 
 		div.clearfix
 
+		div.alert-error(ui-if="validateSearchForm") {{searchErrorMsg}}
+
 		button.btn.btn-submit(type="submit") Search Events
 
 div.criteria-form(ng-class="{show: modalView == 'create'}")
@@ -68,8 +70,11 @@ div.criteria-form(ng-class="{show: modalView == 'create'}")
 		input(type="text", ng-model="create_form.description", placeholder="Description")
 		br
 
+		input(type="url", ng-model="create_form.url", placeholder="Website Link")
+		br
+
 		div.alert-error(ui-if="validateCreateForm") Fill in a name, location, and date for the event
 
 		button.btn.btn-submit(type="submit") Create Event
 
-div.event-map(ui-map="partyMap", ui-options="mapOptions", ui-event="{'map-idle': 'onMapIdle()'}")
+div.event-map(ui-map="partyMap", ui-options="mapOptions", ui-event="{'map-idle': 'onMapIdle()', 'map-zoom_changed': 'onZoomChanged()'}")

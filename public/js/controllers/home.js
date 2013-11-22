@@ -80,11 +80,35 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 
 	$scope.searchParty = function() {
 
+		// Make the start date
+		var hoursAndMinutes = $scope.search_form.from.split(":");
+		$scope.search_form.start_date.clearTime();
+		$scope.search_form.start_date.addHours(hoursAndMinutes[0]);
+		$scope.search_form.start_date.addMinutes(hoursAndMinutes[1]);
+
+
+		// Make the end date
+		hoursAndMinutes = $scope.search_form.to.split(":");
+		$scope.search_form.end_date.clearTime();
+		$scope.search_form.end_date.addHours(hoursAndMinutes[0]);
+		$scope.search_form.end_date.addMinutes(hoursAndMinutes[1]);
+
+		// Make sure the end date is after the start date
+		if ($scope.search_form.start_date.isAfter($scope.search_form.end_date)) {
+			$scope.validateSearchForm = true;
+			$scope.searchErrorMsg = "Start date needs to be before end date";
+			return;
+		} else {
+			$scope.validateSearchForm = false;
+		}
+
+		// Go get the events from the server
 		$http.post('/api/searchParty', {search: $scope.search_form}).success(function(data){
 			
 			if(data.success) {
 
 				$scope.clearMarkers();
+
 				var bounds = new google.maps.LatLngBounds();
 
 				angular.forEach(data.parties, function(party){
@@ -113,10 +137,18 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 				var latlng = $scope.search_form.location.latlng;
 				$scope.partyMap.panTo(new google.maps.LatLng(latlng[1], latlng[0]));
 
-				//if ($scope.partyMarkers.length) $scope.partyMap.fitBounds(bounds);
-
 				$scope.modalView = "";
 				alertify.success("Search Performed");
+
+				if ($scope.partyMarkers.length) {
+					// Getting a $digest already in progress error, so I'm just wrapping it in a timeout
+					// so it's the last thing on the event queue
+					$timeout(function(){
+						$scope.partyMap.fitBounds(bounds);
+					});
+				}
+			} else {
+				alertify.success("No events found");				
 			}
 		});
 	}
@@ -209,6 +241,10 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 		
 	}
 
+	$scope.onZoomChanged = function() {
+		if (infoWindow) infoWindow.close();
+	}
+
 	$scope.getPartyWindowContent = function(party) {
 
 		var sD = new Date(party.date_time.start_date);
@@ -224,7 +260,7 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 					'<p>' +
 						(party.description ? party.description : 'No description provided') +
 					'</p>' +
-					(party.url ? '<p>Link: <a href="' + party.url + '">' + party.url + '</a></p>' : '') 
+					(party.url ? '<p class="party-link">Link: <a href="' + party.url + '" target="_blank">' + party.url + '</a></p>' : '') 
 				'</div>'+
 		'</div>';
 
