@@ -107,46 +107,53 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 			
 			if(data.success) {
 
-				$scope.clearMarkers();
+				$scope.getApiEvents(function(events) {
 
-				var bounds = new google.maps.LatLngBounds();
+					data.parties = data.parties.concat(events);
 
-				angular.forEach(data.parties, function(party){
-					var ll = new google.maps.LatLng(party.location.latlng[1], party.location.latlng[0]);
+					// Clear the map of it's markers
+					$scope.clearMarkers();
 
-					var marker = new google.maps.Marker({
-		                position: ll
-		              	, icon: new google.maps.MarkerImage('/img/marker.svg', null, null, null, new google.maps.Size(40,40))
-		            });
+					var bounds = new google.maps.LatLngBounds();
 
-					google.maps.event.addListener(marker, 'click', function() {
-						infoWindow.close();
-						infoWindow.setContent($scope.getPartyWindowContent(party));
-						infoWindow.open($scope.partyMap, marker);
+					angular.forEach(data.parties, function(party){
+						var ll = new google.maps.LatLng(party.location.latlng[1], party.location.latlng[0]);
+
+						var marker = new google.maps.Marker({
+			                position: ll
+			              	, icon: new google.maps.MarkerImage('/img/marker.svg', null, null, null, new google.maps.Size(40,40))
+			            });
+
+						google.maps.event.addListener(marker, 'click', function() {
+							infoWindow.close();
+							infoWindow.setContent($scope.getPartyWindowContent(party));
+							infoWindow.open($scope.partyMap, marker);
+						});
+
+						$scope.partyMarkers.push(marker)
+			            bounds.extend(ll);
+			            
 					});
 
-					$scope.partyMarkers.push(marker)
-		            bounds.extend(ll);
-		            
+					$scope.initiateMapElements();
+					markerCluster.clearMarkers();
+					markerCluster.addMarkers($scope.partyMarkers);
+
+					var latlng = $scope.search_form.location.latlng;
+					$scope.partyMap.panTo(new google.maps.LatLng(latlng[1], latlng[0]));
+
+					$scope.modalView = "";
+					alertify.success("Search Performed");
+
+					if ($scope.partyMarkers.length) {
+						// Getting a $digest already in progress error, so I'm just wrapping it in a timeout
+						// so it's the last thing on the event queue
+						$timeout(function(){
+							$scope.partyMap.fitBounds(bounds);
+						});
+					}
 				});
 
-				$scope.initiateMapElements();
-				markerCluster.clearMarkers();
-				markerCluster.addMarkers($scope.partyMarkers);
-
-				var latlng = $scope.search_form.location.latlng;
-				$scope.partyMap.panTo(new google.maps.LatLng(latlng[1], latlng[0]));
-
-				$scope.modalView = "";
-				alertify.success("Search Performed");
-
-				if ($scope.partyMarkers.length) {
-					// Getting a $digest already in progress error, so I'm just wrapping it in a timeout
-					// so it's the last thing on the event queue
-					$timeout(function(){
-						$scope.partyMap.fitBounds(bounds);
-					});
-				}
 			} else {
 				alertify.success("No events found");				
 			}
@@ -160,7 +167,49 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 
 	$scope.toOptions = toOriginalOptions;
 
+	// Awesome function that will return a bunch of events
+	$scope.getApiEvents = function(callback) {
 
+		var searchLatLng = $scope.search_form.location.latlng;
+
+		// Search Eventful's API
+		var oArgs = {
+			app_key: "NdNx6C2Fp4pgxRgG"
+			, location: searchLatLng[1] + ", " + searchLatLng[0]
+			, within: $scope.search_form.distance
+			, page_size: 100
+			, date: "Future"
+			, mature: "safe"
+		};
+
+		EVDB.API.call("/events/search", oArgs, function(oData) {
+
+			var eventFulEvents = [];
+
+			for (var i = 0; i < oData.events.event.length; i++) {
+				var event = oData.events.event[i];
+
+				var party = {
+					name:        	event.title
+				    , date_time: 	{
+				    	start_date: event.start_time
+				    	, end_date: event.end_time
+				    	, all_day: event.all_day == "1" ? true : false
+				    }
+				    , location:		{latlng: [event.longitude, event.latitude], address: event.venue_name}
+				    , description:  event.description ? event.description.trim() : undefined
+				    , url: 			event.url
+				};
+
+				console.log(party);
+
+				eventFulEvents.push(party);
+			};
+
+
+			callback(eventFulEvents);
+		});
+	}
 
 
 
@@ -247,9 +296,19 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 
 	$scope.getPartyWindowContent = function(party) {
 
-		var sD = new Date(party.date_time.start_date);
-		var eD = new Date(party.date_time.end_date);
-		var timeString = party.date_time.all_day ? 'All day' : sD.toFormat("H:MI P") + ' to ' + eD.toFormat("H:MI P") + '<br>' + sD.toFormat("MMM D, YYYY");
+		var sD = party.date_time.start_date ? new Date(party.date_time.start_date) : undefined;
+		var eD = party.date_time.end_date ? new Date(party.date_time.end_date) : undefined;
+
+		var timeString;
+		if (party.date_time.all_day) {
+			timeString = 'All day';
+		} else if(!sD && !eD) {
+			timeString = 'No time specified';
+		} else if(!eD) {
+			timeString = 'Starts at ' + sD.toFormat("H:MI P");
+		} else {
+			timeString = sD.toFormat("H:MI P") + ' to ' + eD.toFormat("H:MI P") + '<br>' + sD.toFormat("MMM D, YYYY");
+		}
 
 		var contentString = 
 			'<div class="party-info-window">'+
