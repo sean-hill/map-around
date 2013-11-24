@@ -78,18 +78,29 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 
 	$scope.searchParty = function() {
 
-		// Make the start date
-		var hoursAndMinutes = $scope.search_form.from.split(":");
-		$scope.search_form.start_date.clearTime();
-		$scope.search_form.start_date.addHours(hoursAndMinutes[0]);
-		$scope.search_form.start_date.addMinutes(hoursAndMinutes[1]);
+		if (!$scope.search_form.location.address || !$scope.search_form.distance || !$scope.search_form.start_date || !$scope.search_form.end_date) {
+			$scope.validateSearchForm = true;
+			$scope.searchErrorMsg = "Fill in a location, date range, and distance.";
+			return;
+		} else {
+			$scope.validateSearchForm = false;
+		}
 
+		// Make the start date
+		if ($scope.search_form.to) {
+			var hoursAndMinutes = $scope.search_form.from.split(":");
+			$scope.search_form.start_date.clearTime();
+			$scope.search_form.start_date.addHours(hoursAndMinutes[0]);
+			$scope.search_form.start_date.addMinutes(hoursAndMinutes[1]);
+		}
 
 		// Make the end date
-		hoursAndMinutes = $scope.search_form.to.split(":");
-		$scope.search_form.end_date.clearTime();
-		$scope.search_form.end_date.addHours(hoursAndMinutes[0]);
-		$scope.search_form.end_date.addMinutes(hoursAndMinutes[1]);
+		if ($scope.search_form.from) {
+			hoursAndMinutes = $scope.search_form.to.split(":");
+			$scope.search_form.end_date.clearTime();
+			$scope.search_form.end_date.addHours(hoursAndMinutes[0]);
+			$scope.search_form.end_date.addMinutes(hoursAndMinutes[1]);	
+		}
 
 		// Make sure the end date is after the start date
 		if ($scope.search_form.start_date.isAfter($scope.search_form.end_date)) {
@@ -119,6 +130,7 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 					$scope.clearMarkers();
 					markerCluster.clearMarkers();
 					markerSpider.clearMarkers();
+					$scope.placeClientLocationMarker();
 
 					var bounds = $scope.addMarkersToMap(data.parties);
 
@@ -228,6 +240,7 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 			var marker = new google.maps.Marker({
                 position: ll
               	, icon: new google.maps.MarkerImage('/img/marker.svg', null, null, null, new google.maps.Size(40,40))
+              	, title: party.name
             });
 
 			 google.maps.event.addListener(marker, 'click', function() {
@@ -277,6 +290,7 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 			initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 			$scope.partyMap.setCenter(initialLocation);
 			$scope.partyMap.setZoom(11);
+			$scope.clientLocation = position.coords;
 
 			geocoder.getGeoFromLatLng(position.coords.latitude, position.coords.longitude, function(geo){
 
@@ -296,6 +310,17 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 
 			});
 		});
+	}
+
+	$scope.placeClientLocationMarker = function() {
+		if ($scope.clientLocation) {
+			new google.maps.Marker({
+                position: new google.maps.LatLng($scope.clientLocation.latitude, $scope.clientLocation.longitude)
+              	, icon: new google.maps.MarkerImage('/img/client-location.svg', null, null, null, new google.maps.Size(25,25))
+              	, title: "Your location"
+              	, map: $scope.partyMap
+            });
+		}	
 	}
 
 	$scope.clearMarkers = function() {
@@ -355,7 +380,7 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 		} else if(!sD && !eD) {
 			timeString = 'No time specified';
 		} else if(!eD) {
-			timeString = 'Starts at ' + sD.toFormat("H:MI P");
+			timeString = 'Starts at ' + sD.toFormat("H:MI P") + '<br>' + sD.toFormat("MMM D, YYYY");
 		} else {
 			timeString = sD.toFormat("H:MI P") + ' to ' + eD.toFormat("H:MI P") + '<br>' + sD.toFormat("MMM D, YYYY");
 		}
