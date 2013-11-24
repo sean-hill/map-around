@@ -48,9 +48,6 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 
 		}
 
-		console.log(startDate.toFormat("MMM D, YYYY -- H:MI PP"));
-		console.log(endDate.toFormat("MMM D, YYYY -- H:MI PP"));
-
 		$scope.create_form.date_time = {start_date: startDate, end_date: endDate, all_day: allDay};
 
 		$http.post('/api/createParty', {party: $scope.create_form}).success(function(data){
@@ -117,43 +114,13 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 						return;
 					}
 
-					// Clear the map of it's markers
-					$scope.clearMarkers();
-
 					// Initiate needed map elements
 					$scope.initiateMapElements();
-
-					var bounds = new google.maps.LatLngBounds();
-
-					angular.forEach(data.parties, function(party){
-						var ll = new google.maps.LatLng(party.location.latlng[1], party.location.latlng[0]);
-
-						var marker = new google.maps.Marker({
-			                position: ll
-			              	, icon: new google.maps.MarkerImage('/img/marker.svg', null, null, null, new google.maps.Size(40,40))
-			            });
-
-			            markerSpider.addListener('click', function(marker, event) {
-							infoWindow.close();
-							infoWindow.setContent($scope.getPartyWindowContent(party));
-							infoWindow.open($scope.partyMap, marker);
-						});
-
-						// google.maps.event.addListener(marker, 'click', function() {
-							
-						// });
-
-						$scope.partyMarkers.push(marker)
-			            bounds.extend(ll);
-			            
-					});
-
+					$scope.clearMarkers();
 					markerCluster.clearMarkers();
-					markerCluster.addMarkers($scope.partyMarkers);
+					markerSpider.clearMarkers();
 
-					for (var i = 0; i < $scope.partyMarkers.length; i++) {
-						markerSpider.addMarker($scope.partyMarkers[i]);
-					};
+					var bounds = $scope.addMarkersToMap(data.parties);
 
 					var latlng = $scope.search_form.location.latlng;
 					$scope.partyMap.panTo(new google.maps.LatLng(latlng[1], latlng[0]));
@@ -198,33 +165,89 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 			, page_size: 100
 			, date: ssd.toFormat("YYYYMMDD00") + "-" + eed.toFormat("YYYYMMDD00")
 			, mature: "safe"
-		};
-
-		EVDB.API.call("/events/search", oArgs, function(oData) {
-
-			var eventFulEvents = [];
-
-			for (var i = 0; i < oData.events.event.length; i++) {
-				var event = oData.events.event[i];
-
-				var party = {
-					name:        	event.title
-				    , date_time: 	{
-				    	start_date: event.start_time
-				    	, end_date: event.stop_time
-				    	, all_day: event.all_day == "1" ? true : false
-				    }
-				    , location:		{latlng: [event.longitude, event.latitude], address: event.venue_name}
-				    , description:  event.description ? event.description.trim() : undefined
-				    , url: 			event.url
-				};
-
-				eventFulEvents.push(party);
 			};
 
+		var page_count;
 
-			callback(eventFulEvents);
+		$scope.callEventFulAPI(oArgs, function(events, page_c) {
+			page_count = page_c;
+			callback(events);
+
+			for(var i = 2; i <= page_count; i++) {
+				oArgs.page_number = i;
+				$scope.callEventFulAPI(oArgs, function(events, page_c) {
+					$scope.addMarkersToMap(events);
+				});
+			}
+
 		});
+
+	}
+
+	$scope.callEventFulAPI = function(oArgs, callback) {
+
+		EVDB.API.call("/events/search", oArgs, function(oData) {
+			var eventFulEvents = [];
+
+			if (oData.events) {
+				for (var i = 0; i < oData.events.event.length; i++) {
+					var event = oData.events.event[i];
+
+					var party = $scope.createPartyFromEventFul(event);
+
+					eventFulEvents.push(party);
+				};
+			}
+
+			callback(eventFulEvents, oData.page_count);
+		});
+	}
+
+	$scope.createPartyFromEventFul = function(event) {
+		return {
+			name:        	event.title
+		    , date_time: 	{
+		    	start_date: event.start_time
+		    	, end_date: event.stop_time
+		    	, all_day: (event.all_day == "1" || event.all_day == "2") ? true : false
+		    }
+		    , location:		{latlng: [event.longitude, event.latitude], address: event.venue_name}
+		    , description:  event.description ? event.description.trim() : undefined
+		    , url: 			event.url
+		};
+	}
+
+	$scope.addMarkersToMap = function(parties) {
+		var bounds = new google.maps.LatLngBounds();
+		//just in case
+		$scope.initiateMapElements();
+
+		angular.forEach(parties, function(party){
+			var ll = new google.maps.LatLng(party.location.latlng[1], party.location.latlng[0]);
+
+			var marker = new google.maps.Marker({
+                position: ll
+              	, icon: new google.maps.MarkerImage('/img/marker.svg', null, null, null, new google.maps.Size(40,40))
+            });
+
+			 google.maps.event.addListener(marker, 'click', function() {
+				infoWindow.close();
+				infoWindow.setContent($scope.getPartyWindowContent(party));
+				infoWindow.open($scope.partyMap, marker);
+			 });
+
+			$scope.partyMarkers.push(marker)
+            bounds.extend(ll);
+            
+		});
+
+		markerCluster.addMarkers($scope.partyMarkers);
+
+		for (var i = 0; i < $scope.partyMarkers.length; i++) {
+			markerSpider.addMarker($scope.partyMarkers[i]);
+		};
+
+		return bounds;
 	}
 
 

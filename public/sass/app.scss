@@ -340,6 +340,8 @@ button.close {
 // Map styles //
 .party-info-window {
   width: 300px;
+  max-height: 300px;
+  margin-right: 30px;
 
   h1, p {
     font-family: $font-family;
@@ -363,5 +365,9 @@ button.close {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+  }
+
+  .party-content {
+
   }
 }

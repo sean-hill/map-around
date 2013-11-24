@@ -1,6 +1,6 @@
 html, body {
   margin: 0px;
-  font-family: 'Open Sans', "helvetica neue", sans-serif;
+  font-family: "Open Sans", "helvetica neue", sans-serif;
   color: #333333; }
 
 a {
@@ -107,7 +107,7 @@ input {
   font-size: 14px;
   color: #333333;
   margin-bottom: 10px;
-  font-family: 'Open Sans', "helvetica neue", sans-serif;
+  font-family: "Open Sans", "helvetica neue", sans-serif;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   -ms-box-sizing: border-box;
@@ -122,7 +122,7 @@ input {
     border-color: #48b3cc; }
   input:-moz-placeholder, input::-moz-placeholder, input:-ms-input-placeholder, input::-webkit-input-placeholder {
     color: #dddddd;
-    font-family: 'Open Sans', "helvetica neue", sans-serif;
+    font-family: "Open Sans", "helvetica neue", sans-serif;
     font-weight: normal; }
 
 .alert-error {
@@ -219,7 +219,7 @@ div.block-selector {
   color: white;
   background: none;
   border: 1px solid white;
-  font-family: 'Open Sans', "helvetica neue", sans-serif;
+  font-family: "Open Sans", "helvetica neue", sans-serif;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
@@ -262,6 +262,25 @@ button.close {
   background: transparent;
   border: 0;
   -webkit-appearance: none; }
+
+.party-info-window {
+  width: 300px;
+  max-height: 300px;
+  margin-right: 30px; }
+  .party-info-window h1, .party-info-window p {
+    font-family: "Open Sans", "helvetica neue", sans-serif; }
+  .party-info-window h1 {
+    font-weight: normal; }
+  .party-info-window hr {
+    border: none;
+    border-top: 1px solid #eeeeee; }
+  .party-info-window .party-meta {
+    color: #bbbbbb;
+    margin-top: 5px; }
+  .party-info-window .party-link {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden; }
 
 .alertify, .alertify-show, .alertify-log {
   -webkit-transition: all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -695,12 +714,12 @@ button.close {
 /* Component containers
 ----------------------------------*/
 .ui-widget {
-  font-family: 'Open Sans', "helvetica neue", sans-serif;
+  font-family: "Open Sans", "helvetica neue", sans-serif;
   font-size: 16px; }
   .ui-widget .ui-widget {
     font-size: 1em; }
   .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {
-    font-family: 'Open Sans', "helvetica neue", sans-serif;
+    font-family: "Open Sans", "helvetica neue", sans-serif;
     font-size: 1em; }
 
 .ui-widget-content {
