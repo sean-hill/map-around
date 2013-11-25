@@ -174,7 +174,7 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 			app_key: "NdNx6C2Fp4pgxRgG"
 			, location: searchLatLng[1] + ", " + searchLatLng[0]
 			, within: $scope.search_form.distance
-			, page_size: 100
+			, page_size: 50
 			, date: ssd.toFormat("YYYYMMDD00") + "-" + eed.toFormat("YYYYMMDD00")
 			, mature: "safe"
 			};

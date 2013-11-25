@@ -88,8 +88,13 @@ $to-screen-edge: 8px;
           margin-left: 10px;
         }
       }
+
+
     }
 
+    ul.nav-list.mobile {
+      display: none;
+    }
   }
 }
 
@@ -370,4 +375,68 @@ button.close {
   .party-content {
 
   }
+}
+
+@media only screen and (max-width : 360px) {
+
+  ul.nav-list.desktop {
+    display: none;
+  }
+
+  ul.nav-list.mobile {
+    display: block !important;
+
+    .btn {
+      padding: 4px 7px;
+
+      img {
+        position: relative;
+        top: 3px;
+      }
+
+      &:hover, &:active, &.active {
+        background: $main-color !important;
+      }
+    }
+  }
+
+  .criteria-form {
+
+    width: 310px;
+
+    input {
+      font-size: 12px;
+      width: 275px;
+    }
+
+    left: 0px;
+    right: 0px;
+    margin: auto;
+
+
+  }
+
+  div.date-time-input {
+    .date {
+      width: 96px;
+    }
+    .from, .to {
+      width: 89px;
+    }
+  }
+
+  div.block-selector .block {
+    font-size: 12px;
+  }
+
+  .select2-results .select2-result-label {
+    font-size: 11px !important;
+  }
+
+  .select2-choice {
+    padding: 4px 0px 3px 8px !important;
+    font-size: 12px !important;
+  }
+
+
 }
