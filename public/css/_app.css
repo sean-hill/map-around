@@ -60,6 +60,8 @@ td, th {
         float: left; }
         .navbar div.nav-actions ul.nav-list li .btn {
           margin-left: 10px; }
+    .navbar div.nav-actions ul.nav-list.mobile {
+      display: none; }
 
 .event-map {
   position: absolute;
@@ -281,6 +283,38 @@ button.close {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden; }
+
+@media only screen and (max-width: 360px) {
+  ul.nav-list.desktop {
+    display: none; }
+  ul.nav-list.mobile {
+    display: block !important; }
+    ul.nav-list.mobile .btn {
+      padding: 4px 7px; }
+      ul.nav-list.mobile .btn img {
+        position: relative;
+        top: 3px; }
+      ul.nav-list.mobile .btn:hover, ul.nav-list.mobile .btn:active, ul.nav-list.mobile .btn.active {
+        background: #48b3cc !important; }
+  .criteria-form {
+    width: 310px;
+    left: 0px;
+    right: 0px;
+    margin: auto; }
+    .criteria-form input {
+      font-size: 12px;
+      width: 275px; }
+  div.date-time-input .date {
+    width: 96px; }
+  div.date-time-input .from, div.date-time-input .to {
+    width: 89px; }
+  div.block-selector .block {
+    font-size: 12px; }
+  .select2-results .select2-result-label {
+    font-size: 11px !important; }
+  .select2-choice {
+    padding: 4px 0px 3px 8px !important;
+    font-size: 12px !important; } }
 
 .alertify, .alertify-show, .alertify-log {
   -webkit-transition: all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
