@@ -86,6 +86,9 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 			$scope.validateSearchForm = false;
 		}
 
+		$scope.gettingEvents = true;
+		$scope.modalView = "";
+
 		// Make the start date
 		if ($scope.search_form.to) {
 			var hoursAndMinutes = $scope.search_form.from.split(":");
@@ -111,6 +114,10 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 			$scope.validateSearchForm = false;
 		}
 
+		// Initiate needed map elements
+		$scope.initiateMapElements();
+		infoWindow.close();
+
 		// Go get the events from the server
 		$http.post('/api/searchParty', {search: $scope.search_form}).success(function(data){
 			
@@ -125,8 +132,6 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 						return;
 					}
 
-					// Initiate needed map elements
-					$scope.initiateMapElements();
 					$scope.clearMarkers();
 					markerCluster.clearMarkers();
 					markerSpider.clearMarkers();
@@ -137,9 +142,6 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 					var latlng = $scope.search_form.location.latlng;
 					$scope.partyMap.panTo(new google.maps.LatLng(latlng[1], latlng[0]));
 
-					$scope.modalView = "";
-					alertify.success("Search Performed");
-
 					if ($scope.partyMarkers.length) {
 						// Getting a $digest already in progress error, so I'm just wrapping it in a timeout
 						// so it's the last thing on the event queue
@@ -147,6 +149,7 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 							$scope.partyMap.fitBounds(bounds);
 						});
 					}
+					$scope.gettingEvents = false;
 				});
 
 			} else {
@@ -207,7 +210,7 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 
 					var party = $scope.createPartyFromEventFul(event);
 
-					eventFulEvents.push(party);
+					if (party) eventFulEvents.push(party);
 				};
 			}
 
@@ -216,6 +219,11 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 	}
 
 	$scope.createPartyFromEventFul = function(event) {
+
+		if (!event.latitude || !event.longitude) {
+			return false;
+		}
+
 		return {
 			name:        	event.title
 		    , date_time: 	{
@@ -285,8 +293,10 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 
     // If we can use their browser's location, center to there
     if (navigator.geolocation) {
+    	$scope.gettingEvents = true;
+
 		navigator.geolocation.getCurrentPosition(function (position) {
-			
+			console.log("Got po");
 			initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 			$scope.partyMap.setCenter(initialLocation);
 			$scope.partyMap.setZoom(11);
@@ -309,6 +319,14 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 				$scope.searchParty();
 
 			});
+		}, function(err) {
+			$scope.gettingEvents = false;
+			$scope.noCurrentLocation = true;
+
+			// They denied permission, open the search form
+			if (err.code == 1) {
+				$scope.modalView = "search";
+			}
 		});
 	}
 

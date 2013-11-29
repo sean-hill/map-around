@@ -1,3 +1,7 @@
+div.loader(ng-class="{active: gettingEvents}")
+	div.text.flasher
+		span Getting Events
+
 div.navbar
 	a.brand(href="/") 
 		img(src="/img/logo.svg", height="25px", width="25px")
@@ -21,7 +25,7 @@ div.criteria-form(ng-class="{show: modalView == 'search'}")
 
 		div.location-input
 			input(type="text", ng-model="search_form.location.address", placeholder="{{locationPlaceholder}}", onblurgeocode, form="search_form")
-			div#search_location.current-location(currentlocation, form="search_form")
+			div#search_location.current-location(currentlocation, form="search_form", ng-hide="noCurrentLocation")
 				img(src="/img/current-location.svg", height="20px", width="20px")
 
 		div.date-time-input.clearfix
@@ -61,7 +65,7 @@ div.criteria-form(ng-class="{show: modalView == 'create'}")
 
 		div.location-input
 			input(type="text", ng-model="create_form.location.address", placeholder="{{locationPlaceholder}}", onblurgeocode, form="create_form")
-			div.current-location(currentlocation, form="create_form")
+			div.current-location(currentlocation, form="create_form", ng-hide="noCurrentLocation")
 				img(src="/img/current-location.svg", height="20px", width="20px")
 
 		div.date-time-input

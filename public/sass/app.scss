@@ -39,6 +39,43 @@ td, th {
   clear: both;
 }
 
+.loader {
+  position: absolute;
+  top: -10px;
+  left: 0;
+  right: 0;
+  width: 150px;
+  height: 50px;
+  z-index: 50;
+  background: #FFF;
+  border: 3px solid rgba($main-color, .5);
+  margin: auto;
+  text-align: center;
+  border-bottom-left-radius: 15px;
+  -moz-border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  -moz-border-bottom-right-radius: 15px;
+  
+  @include transition(all linear 200ms);
+  @include box-shadow(0px 0px 20px #FAFAFA);
+
+  img {
+    position: relative;
+    top: 13px;
+  }
+
+  .text {
+    position: relative;
+    top: 17px;
+    color: $main-color;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  &.active {
+    top: 40px;
+  }
+}
+
 // Navbar styles
 $nav-height: 50px;
 $nav-border-width: 3px;
@@ -152,7 +189,7 @@ input {
 
   &:focus {
     outline: none;
-    border-color: $main-color
+    border-color: $main-color;
   }
 
   &:-moz-placeholder, &::-moz-placeholder, &:-ms-input-placeholder, &::-webkit-input-placeholder {
@@ -438,5 +475,34 @@ button.close {
     font-size: 12px !important;
   }
 
+}
 
+.flasher {
+    animation-name: blinker;
+    animation-duration: 1.5s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+
+    -webkit-animation-name: blinker;
+    -webkit-animation-duration: 1.5s;
+    -webkit-animation-timing-function: linear;
+    -webkit-animation-iteration-count: infinite;
+}
+
+@-moz-keyframes blinker {  
+    0% { opacity: 1.0; }
+    50% { opacity: 0.0; }
+    100% { opacity: 1.0; }
+}
+
+@-webkit-keyframes blinker {  
+    0% { opacity: 1.0; }
+    50% { opacity: 0.0; }
+    100% { opacity: 1.0; }
+}
+
+@keyframes blinker {  
+    0% { opacity: 1.0; }
+    50% { opacity: 0.0; }
+    100% { opacity: 1.0; }
 }
