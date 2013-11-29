@@ -30,6 +30,41 @@ td, th {
   display: table;
   clear: both; }
 
+.loader {
+  position: absolute;
+  top: -10px;
+  left: 0;
+  right: 0;
+  width: 150px;
+  height: 50px;
+  z-index: 50;
+  background: white;
+  border: 3px solid rgba(72, 179, 204, 0.5);
+  margin: auto;
+  text-align: center;
+  border-bottom-left-radius: 15px;
+  -moz-border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  -moz-border-bottom-right-radius: 15px;
+  -webkit-transition: all linear 200ms;
+  -moz-transition: all linear 200ms;
+  -o-transition: all linear 200ms;
+  -ms-transition: all linear 200ms;
+  transition: all linear 200ms;
+  -webkit-box-shadow: 0px 0px 20px #fafafa;
+  -moz-box-shadow: 0px 0px 20px #fafafa;
+  box-shadow: 0px 0px 20px #fafafa; }
+  .loader img {
+    position: relative;
+    top: 13px; }
+  .loader .text {
+    position: relative;
+    top: 17px;
+    color: #48b3cc;
+    -webkit-font-smoothing: antialiased; }
+  .loader.active {
+    top: 40px; }
+
 .navbar {
   height: 50px;
   background: #48b3cc;
@@ -315,6 +350,46 @@ button.close {
   .select2-choice {
     padding: 4px 0px 3px 8px !important;
     font-size: 12px !important; } }
+
+.flasher {
+  animation-name: blinker;
+  animation-duration: 1.5s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  -webkit-animation-name: blinker;
+  -webkit-animation-duration: 1.5s;
+  -webkit-animation-timing-function: linear;
+  -webkit-animation-iteration-count: infinite; }
+
+@-moz-keyframes blinker {
+  0% {
+    opacity: 1; }
+
+  50% {
+    opacity: 0; }
+
+  100% {
+    opacity: 1; } }
+
+@-webkit-keyframes blinker {
+  0% {
+    opacity: 1; }
+
+  50% {
+    opacity: 0; }
+
+  100% {
+    opacity: 1; } }
+
+@keyframes blinker {
+  0% {
+    opacity: 1; }
+
+  50% {
+    opacity: 0; }
+
+  100% {
+    opacity: 1; } }
 
 .alertify, .alertify-show, .alertify-log {
   -webkit-transition: all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
