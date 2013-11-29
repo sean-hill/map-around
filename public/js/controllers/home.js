@@ -86,7 +86,8 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 			$scope.validateSearchForm = false;
 		}
 
-		$scope.gettingEvents = true;
+		$scope.loadingText = "Finding Events";
+		$scope.showLoader = true;
 		$scope.modalView = "";
 
 		// Make the start date
@@ -149,7 +150,7 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 							$scope.partyMap.fitBounds(bounds);
 						});
 					}
-					$scope.gettingEvents = false;
+					$scope.showLoader = false;
 				});
 
 			} else {
@@ -214,6 +215,7 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 				};
 			}
 
+			$scope.$apply();
 			callback(eventFulEvents, oData.page_count);
 		});
 	}
@@ -223,6 +225,9 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 		if (!event.latitude || !event.longitude) {
 			return false;
 		}
+
+		event.start_time = event.start_time ? $scope.parseEventfulDate(event.start_time) : undefined;
+		event.stop_time = event.stop_time ? $scope.parseEventfulDate(event.stop_time) : undefined;
 
 		return {
 			name:        	event.title
@@ -293,10 +298,12 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 
     // If we can use their browser's location, center to there
     if (navigator.geolocation) {
-    	$scope.gettingEvents = true;
+
+    	$scope.loadingText = "Getting Location"
+    	$scope.showLoader = true;
 
 		navigator.geolocation.getCurrentPosition(function (position) {
-			console.log("Got po");
+			
 			initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 			$scope.partyMap.setCenter(initialLocation);
 			$scope.partyMap.setZoom(11);
@@ -320,14 +327,17 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 
 			});
 		}, function(err) {
-			$scope.gettingEvents = false;
-			$scope.noCurrentLocation = true;
-
-			// They denied permission, open the search form
-			if (err.code == 1) {
-				$scope.modalView = "search";
-			}
+			$scope.noClientLocation();
 		});
+	} else {
+		$scope.noClientLocation();
+	}
+
+	$scope.noClientLocation = function() {
+		$scope.showLoader = false;
+		$scope.noCurrentLocation = true;
+		$scope.modalView = "search";
+		$scope.$apply();
 	}
 
 	$scope.placeClientLocationMarker = function() {
@@ -417,6 +427,19 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 		'</div>';
 
 		return contentString;
+	}
+
+	$scope.parseEventfulDate = function(dateStr) {
+		
+		var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+		var dateTime = dateStr.split(" ");
+		var date = dateTime[0];
+		var time = dateTime[1];
+
+		var splitDate = date.split("-");
+
+		return months[splitDate[1] - 1] + " " + splitDate[2] + ", " + splitDate[0] + " " + time;
 	}
 
 }
