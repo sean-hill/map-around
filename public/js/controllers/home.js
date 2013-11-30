@@ -236,7 +236,7 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 		    	, end_date: event.stop_time
 		    	, all_day: (event.all_day == "1" || event.all_day == "2") ? true : false
 		    }
-		    , location:		{latlng: [event.longitude, event.latitude], address: event.venue_name}
+		    , location:		{latlng: [event.longitude, event.latitude], address: event.venue_address}
 		    , description:  event.description ? event.description.trim() : undefined
 		    , url: 			event.url
 		};
