@@ -145,6 +145,7 @@ input {
   color: #333333;
   margin-bottom: 10px;
   font-family: "Open Sans", "helvetica neue", sans-serif;
+  -webkit-appearance: none;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   -ms-box-sizing: border-box;
