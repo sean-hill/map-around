@@ -29,6 +29,39 @@ if (process.env.NODE_ENV === 'development'){
 		}
 	});
 
+	var jsFiles = [
+		"public/js/min/jquery.js",
+		"public/js/min/jquery-ui.min.js",
+		"public/js/min/select2.min.js",
+		"public/js/min/date-utils.js",
+		"public/js/min/angular.min.js",
+		"public/js/min/angular-ui.js",
+		"public/js/min/alertify.js",
+		"public/js/min/eventful.js",
+		"public/js/min/markerCluster.js",
+		"public/js/min/markerSpider.js",
+		"public/js/controllers/module.js",
+		"public/js/directives.js",
+		"public/js/services.js",
+		"public/js/controllers/home.js"
+	];
+
+	var compressor = require('node-minify');
+
+	new compressor.minify({
+        type: 'no-compress',
+        fileIn: jsFiles,
+        tempPath: '/tmp/',
+        fileOut: 'public/js/_base.min.js',
+        options: [
+          '--nomunge'
+          ],
+        callback: function(err){
+            if (err) { return console.log(err); }
+            console.log('Main Javascript compressed');
+        }
+     });
+
 }
 
 // Path to the public directory for serving js/css/img files
