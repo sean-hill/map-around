@@ -183,6 +183,7 @@ input {
   color: #333;
   margin-bottom: 10px;
   font-family: $font-family;
+  -webkit-appearance: none;
 
   @include border-box;
   @include transition(200ms all linear);
