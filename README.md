@@ -14,4 +14,8 @@ Find what's going on around you.
 
 ## Wiki
 
-The information of this web application can be viewed [here](https://github.com/sean-hill/map-around/wiki).
+Documentation for this web application can be viewed [here](https://github.com/sean-hill/map-around/wiki).
+
+## Website
+
+A link to the website can be found [here](http://maparound.herokuapp.com).
