@@ -28,6 +28,9 @@ div.criteria-form(ng-class="{show: modalView == 'search'}")
 			div#search_location.current-location(currentlocation, form="search_form", ng-hide="noCurrentLocation")
 				img(src="/img/current-location.svg", height="20px", width="20px")
 
+		div.keywords-input
+			input(type="text", ng-model="search_form.keywords", placeholder="Optional Keywords")
+
 		div.date-time-input.clearfix
 			input.date(type="text", ui-date="{minDate: today, maxDate: search_form.end_date, dateFormat: 'M d, yy'}", ng-model="search_form.start_date", placeholder="Start Date")
 			select.time-select(ui-select2='ui-select2', ng-model='search_form.from', data-placeholder='From')

@@ -174,18 +174,22 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 		var eed = $scope.search_form.end_date;
 
 		// Search Eventful's API
-		var oArgs = {
+		var eventfulOptions = {
 			app_key: "NdNx6C2Fp4pgxRgG"
 			, location: searchLatLng[1] + ", " + searchLatLng[0]
 			, within: $scope.search_form.distance
 			, page_size: 50
 			, date: ssd.toFormat("YYYYMMDD00") + "-" + eed.toFormat("YYYYMMDD00")
 			, mature: "safe"
-			};
+		};
+
+		if ($scope.search_form.keywords) {
+			eventfulOptions.keywords = $scope.search_form.keywords
+		}
 
 		var page_count;
 
-		$scope.callEventFulAPI(oArgs, function(events, page_c) {
+		$scope.callEventFulAPI(eventfulOptions, function(events, page_c) {
 			page_count = page_c;
 			callback(events);
 
