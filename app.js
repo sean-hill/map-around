@@ -7,8 +7,8 @@ var express 	= require('express'),
 	sass        = require('node-sass'),
 	fs          = require('fs'),
 	Common 		= require('./common.js'),
-	Route 		= require('./route.js'),
-	Model 		= require('./model.js');
+	Route 		= require('./route.js');
+	//Model 		= require('./model.js');
 
 // Things to do only on development
 if (process.env.NODE_ENV === 'development'){
@@ -89,7 +89,7 @@ app.configure(function(){
 // Development Configuration
 app.configure('development', function(){
 	// FOR ANALYTICS LATER app.locals.mixpanel_token = "81b544afb31fc029dfd9fd7979772e87";
-	Common.mongoose.set('debug', true);
+	// Common.mongoose.set('debug', true);
 	console.log("Dev development");
 });
 
@@ -100,7 +100,7 @@ app.configure('production', function(){
 });
 
 // Connect to our mongodb database
-Common.mongoose.connect('mongodb://' + Common.conf.mongo_config.auth.name + ':' + Common.conf.mongo_config.auth.pass + '@' + Common.conf.mongo_config.host + ':' + Common.conf.mongo_config.port + '/' + Common.conf.mongo_config.dbname, {db: {safe:true}});
+// Common.mongoose.connect('mongodb://' + Common.conf.mongo_config.auth.name + ':' + Common.conf.mongo_config.auth.pass + '@' + Common.conf.mongo_config.host + ':' + Common.conf.mongo_config.port + '/' + Common.conf.mongo_config.dbname, {db: {safe:true}});
 
 //
 //
@@ -127,9 +127,11 @@ app.get('/', Route.index.landing);
 // For loading our partial views
 app.get('/partials/:name', Route.index.partials);
 
+// @DEPRECATED
+//
 // Party requests
-app.post('/api/createParty', Route.party.createParty)
-app.post('/api/searchParty', Route.party.searchParty)
+// app.post('/api/createParty', Route.party.createParty)
+// app.post('/api/searchParty', Route.party.searchParty)
 
 //
 //

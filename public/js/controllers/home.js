@@ -10,55 +10,6 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 	var markerSpider;
 	var infoWindow;
 
-	$scope.createParty = function() {
-
-		if (!$scope.create_form.name || !$scope.create_form.location || !$scope.create_form.raw_date) {
-			$scope.validateCreateForm = true;
-			return;
-		} else {
-			$scope.validateCreateForm = false;
-		}
-
-		var startDate;
-		var endDate;
-		var allDay = false;
-
-		if ($scope.create_form.from && $scope.create_form.to) {
-
-			// Make the start date
-			var hoursAndMinutes = $scope.create_form.from.split(":");
-			startDate = new Date($scope.create_form.raw_date.getTime());
-			startDate.addHours(hoursAndMinutes[0]);
-			startDate.addMinutes(hoursAndMinutes[1]);
-
-
-			// Make the end date
-			hoursAndMinutes = $scope.create_form.to.split(":");
-			endDate = new Date($scope.create_form.raw_date.getTime());
-			endDate.addHours(hoursAndMinutes[0]);
-			endDate.addMinutes(hoursAndMinutes[1]);
-
-		} else {
-
-			startDate = new Date($scope.create_form.raw_date);
-			endDate = new Date($scope.create_form.raw_date);
-			endDate.addHours(23);
-			endDate.addMinutes(59);
-			allDay = true;
-
-		}
-
-		$scope.create_form.date_time = {start_date: startDate, end_date: endDate, all_day: allDay};
-
-		$http.post('/api/createParty', {party: $scope.create_form}).success(function(data){
-			if (data.success) {
-				$scope.modalView = "";
-				$scope.create_form = {location: {}};
-				alertify.success("Event created");
-			}
-		});
-	}
-
 	// This forces the user to chose a time after the from time
 	$scope.changeFromTime = function() {
 		var chosenIdx = 0;
@@ -119,43 +70,32 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 		$scope.initiateMapElements();
 		infoWindow.close();
 
-		// Go get the events from the server
-		$http.post('/api/searchParty', {search: $scope.search_form}).success(function(data){
-			
-			if(data.success) {
+		// Go get the events from eventful
+		$scope.getApiEvents(function(events) {
 
-				$scope.getApiEvents(function(events) {
-
-					data.parties = data.parties.concat(events);
-
-					if (!data.parties.length) {
-						alertify.success("No events found, try different criteria");
-						return;
-					}
-
-					$scope.clearMarkers();
-					markerCluster.clearMarkers();
-					markerSpider.clearMarkers();
-					$scope.placeClientLocationMarker();
-
-					var bounds = $scope.addMarkersToMap(data.parties);
-
-					var latlng = $scope.search_form.location.latlng;
-					$scope.partyMap.panTo(new google.maps.LatLng(latlng[1], latlng[0]));
-
-					if ($scope.partyMarkers.length) {
-						// Getting a $digest already in progress error, so I'm just wrapping it in a timeout
-						// so it's the last thing on the event queue
-						$timeout(function(){
-							$scope.partyMap.fitBounds(bounds);
-						});
-					}
-					$scope.showLoader = false;
-				});
-
-			} else {
-				alertify.success("Error searching for events");
+			if (!events.length) {
+				alertify.success("No events found, try different criteria");
+				return;
 			}
+
+			$scope.clearMarkers();
+			markerCluster.clearMarkers();
+			markerSpider.clearMarkers();
+			$scope.placeClientLocationMarker();
+
+			var bounds = $scope.addMarkersToMap(events);
+
+			var latlng = $scope.search_form.location.latlng;
+			$scope.partyMap.panTo(new google.maps.LatLng(latlng[1], latlng[0]));
+
+			if ($scope.partyMarkers.length) {
+				// Getting a $digest already in progress error, so I'm just wrapping it in a timeout
+				// so it's the last thing on the event queue
+				$timeout(function(){
+					$scope.partyMap.fitBounds(bounds);
+				});
+			}
+			$scope.showLoader = false;
 		});
 	}
 
@@ -194,8 +134,8 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 			callback(events);
 
 			for(var i = 2; i <= page_count; i++) {
-				oArgs.page_number = i;
-				$scope.callEventFulAPI(oArgs, function(events, page_c) {
+				eventfulOptions.page_number = i;
+				$scope.callEventFulAPI(eventfulOptions, function(events, page_c) {
 					$scope.addMarkersToMap(events);
 				});
 			}
@@ -204,14 +144,14 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 
 	}
 
-	$scope.callEventFulAPI = function(oArgs, callback) {
+	$scope.callEventFulAPI = function(eventfulOptions, callback) {
 
-		EVDB.API.call("/events/search", oArgs, function(oData) {
+		EVDB.API.call("/events/search", eventfulOptions, function(data) {
 			var eventFulEvents = [];
 
-			if (oData.events) {
-				for (var i = 0; i < oData.events.event.length; i++) {
-					var event = oData.events.event[i];
+			if (data.events) {
+				for (var i = 0; i < data.events.event.length; i++) {
+					var event = data.events.event[i];
 
 					var party = $scope.createPartyFromEventFul(event);
 
@@ -220,7 +160,7 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 			}
 
 			$scope.$apply();
-			callback(eventFulEvents, oData.page_count);
+			callback(eventFulEvents, data.page_count);
 		});
 	}
 
@@ -445,5 +385,63 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 
 		return months[splitDate[1] - 1] + " " + splitDate[2] + ", " + splitDate[0] + " " + time;
 	}
+
+
+
+
+
+
+
+
+	// @DEPRECATED
+	//
+	// $scope.createParty = function() {
+
+	// 	if (!$scope.create_form.name || !$scope.create_form.location || !$scope.create_form.raw_date) {
+	// 		$scope.validateCreateForm = true;
+	// 		return;
+	// 	} else {
+	// 		$scope.validateCreateForm = false;
+	// 	}
+
+	// 	var startDate;
+	// 	var endDate;
+	// 	var allDay = false;
+
+	// 	if ($scope.create_form.from && $scope.create_form.to) {
+
+	// 		// Make the start date
+	// 		var hoursAndMinutes = $scope.create_form.from.split(":");
+	// 		startDate = new Date($scope.create_form.raw_date.getTime());
+	// 		startDate.addHours(hoursAndMinutes[0]);
+	// 		startDate.addMinutes(hoursAndMinutes[1]);
+
+
+	// 		// Make the end date
+	// 		hoursAndMinutes = $scope.create_form.to.split(":");
+	// 		endDate = new Date($scope.create_form.raw_date.getTime());
+	// 		endDate.addHours(hoursAndMinutes[0]);
+	// 		endDate.addMinutes(hoursAndMinutes[1]);
+
+	// 	} else {
+
+	// 		startDate = new Date($scope.create_form.raw_date);
+	// 		endDate = new Date($scope.create_form.raw_date);
+	// 		endDate.addHours(23);
+	// 		endDate.addMinutes(59);
+	// 		allDay = true;
+
+	// 	}
+
+	// 	$scope.create_form.date_time = {start_date: startDate, end_date: endDate, all_day: allDay};
+
+	// 	$http.post('/api/createParty', {party: $scope.create_form}).success(function(data){
+	// 		if (data.success) {
+	// 			$scope.modalView = "";
+	// 			$scope.create_form = {location: {}};
+	// 			alertify.success("Event created");
+	// 		}
+	// 	});
+	// }
 
 }

@@ -95,6 +95,9 @@ td, th {
         float: left; }
         .navbar div.nav-actions ul.nav-list li .btn {
           margin-left: 10px; }
+        .navbar div.nav-actions ul.nav-list li a.btn {
+          position: relative;
+          top: 2px; }
     .navbar div.nav-actions ul.nav-list.mobile {
       display: none; }
 

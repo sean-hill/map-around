@@ -124,6 +124,11 @@ $to-screen-edge: 8px;
         .btn {
           margin-left: 10px;
         }
+
+        a.btn {
+          position: relative;
+          top: 2px;
+        }
       }
 
 

@@ -9,12 +9,12 @@ div.navbar
 	div.nav-actions
 		ul.nav-list.desktop
 			li: button.btn(ng-click="modalView = 'search'", ng-class="{active: modalView == 'search'}") Search
-			li: button.btn(ng-click="modalView = 'create'", ng-class="{active: modalView == 'create'}") Create
+			li: a.btn(href="http://eventful.com/events/new", target="_blank") Create
 			//- li: button.btn Sign In
 		ul.nav-list.mobile
 			li: button.btn(ng-click="modalView = 'search'", ng-class="{active: modalView == 'search'}")
 				img(src="/img/search.svg", height="15px", width="15px")
-			li: button.btn(ng-click="modalView = 'create'", ng-class="{active: modalView == 'create'}")
+			li: a.btn(href="http://eventful.com/events/new", target="_blank")
 				img(src="/img/plus.svg", height="15px", width="15px")
 
 div.criteria-form(ng-class="{show: modalView == 'search'}")
