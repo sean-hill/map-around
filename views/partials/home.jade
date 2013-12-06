@@ -8,20 +8,20 @@ div.navbar
 		span Map Around
 	div.nav-actions
 		ul.nav-list.desktop
-			li: button.btn(ng-click="modalView = 'search'", ng-class="{active: modalView == 'search'}") Search
-			li: a.btn(href="http://eventful.com/events/new", target="_blank") Create
+			li: button.btn(ng-click="toggleModal('search')", ng-class="{active: modalView == 'search'}") Search
+			li: a.btn(href="http://eventful.com/events/new", target="_blank", ng-click="clickedCreate()") Create
 			//- li: button.btn Sign In
 		ul.nav-list.mobile
-			li: button.btn(ng-click="modalView = 'search'", ng-class="{active: modalView == 'search'}")
+			li: button.btn(ng-click="toggleModal('search')", ng-class="{active: modalView == 'search'}")
 				img(src="/img/search.svg", height="15px", width="15px")
-			li: a.btn(href="http://eventful.com/events/new", target="_blank")
+			li: a.btn(href="http://eventful.com/events/new", target="_blank", ng-click="clickedCreate()")
 				img(src="/img/plus.svg", height="15px", width="15px")
 
 div.criteria-form(ng-class="{show: modalView == 'search'}")
 	form(ng-submit="searchParty()")
 		div.header
 			h1 Search for events
-			button.close(type="button", ng-click="modalView = ''") &times;
+			button.close(type="button", ng-click="toggleModal('')") &times;
 
 		div.location-input
 			input(type="text", ng-model="search_form.location.address", placeholder="{{locationPlaceholder}}", onblurgeocode, form="search_form")

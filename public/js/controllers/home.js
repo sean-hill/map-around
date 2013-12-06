@@ -1,5 +1,7 @@
 function HomeCtrl($scope, $http, $timeout, geocoder) {
 
+	mixpanel.track("Home Page Loaded");
+
 	$scope.create_form = {location: {}};
 	$scope.search_form = {location: {}};
 	$scope.errors = {};
@@ -9,6 +11,23 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 	var markerCluster;
 	var markerSpider;
 	var infoWindow;
+
+	$scope.toggleModal = function(view) {
+
+		var prevView = $scope.modalView;
+
+		$scope.modalView = view;
+
+		if ($scope.modalView) {
+			mixpanel.track("Opened " + view + " modal");
+		} else {
+			mixpanel.track("Closed " + prevView + " modal");
+		}
+	}
+
+	$scope.clickedCreate = function() {
+		mixpanel.track("Clicked create");
+	}
 
 	// This forces the user to chose a time after the from time
 	$scope.changeFromTime = function() {
@@ -96,6 +115,8 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 				});
 			}
 			$scope.showLoader = false;
+
+			mixpanel.track("Searched Events");
 		});
 	}
 

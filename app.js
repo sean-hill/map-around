@@ -88,14 +88,14 @@ app.configure(function(){
 
 // Development Configuration
 app.configure('development', function(){
-	// FOR ANALYTICS LATER app.locals.mixpanel_token = "81b544afb31fc029dfd9fd7979772e87";
+	app.locals.mixpanel_token = "906bae84ae557eadd1581a7e92e6e3e8";
 	// Common.mongoose.set('debug', true);
 	console.log("Dev development");
 });
 
 // Production Configuration
 app.configure('production', function(){
-	// FOR ANALYTICS LATER app.locals.mixpanel_token = "d2b671edd9621cac1fe73490086f920d";
+	app.locals.mixpanel_token = "b1a1d131cd64420baef4b67b465e8dd4";
 	console.log("Prod development")
 });
 
