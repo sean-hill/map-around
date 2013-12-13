@@ -3,7 +3,14 @@
 //////////////////////
 
 exports.landing =  function(req, res){
-	res.render('index');
+
+	if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(req.headers['user-agent'])) {
+		res.redirect("http://maparound-mobile.herokuapp.com")
+	}
+	else {
+		res.render("index")	
+	}
+	
 };
 
 exports.partials = function (req, res) {
