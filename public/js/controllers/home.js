@@ -93,6 +93,7 @@ function HomeCtrl($scope, $http, $timeout, geocoder) {
 		$scope.getApiEvents(function(events) {
 
 			if (!events.length) {
+				$scope.showLoader = false;
 				alertify.success("No events found, try different criteria");
 				return;
 			}
